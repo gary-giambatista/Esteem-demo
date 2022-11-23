@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Esteem-Demo",
-    "slug": "Esteem-Demo",
+    "slug": "esteem-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9bff9fac-ccca-4253-aa11-230afa47e715"
+      }
+    },
+    "owner": "ggg3"
   }
 }

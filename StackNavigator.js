@@ -7,7 +7,7 @@ import LoginScreen from "./screens/LoginScreen";
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-	const user = true;
+	const user = false;
 
 	return (
 		<Stack.Navigator
