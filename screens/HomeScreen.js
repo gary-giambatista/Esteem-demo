@@ -9,6 +9,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import TopicList from "../components/TopicList";
 import { useAuth } from "../hooks/useAuth";
 
 const HomeScreen = () => {
@@ -33,33 +34,7 @@ const HomeScreen = () => {
 			<View style={styles.pageTitle}>
 				<Text style={styles.pageTitle}>Discussion Topics</Text>
 			</View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #1</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #2</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #3</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
+			<TopicList />
 		</SafeAreaView>
 	);
 };
@@ -94,12 +69,5 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2,
 		borderBottomColor: "#275473",
 		fontSize: 30,
-	},
-	rowContainer: {
-		padding: 10,
-		borderBottomWidth: 1,
-	},
-	rowTitle: {
-		fontSize: 20,
 	},
 });

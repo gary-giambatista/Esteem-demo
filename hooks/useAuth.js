@@ -88,7 +88,7 @@ export const AuthContextProvider = ({ children }) => {
 			initialLoading,
 			loading,
 		}),
-		[user]
+		[user, initialLoading, loading]
 	);
 
 	return (
