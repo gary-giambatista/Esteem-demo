@@ -1,41 +1,24 @@
-import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const TopicRow = () => {
+const TopicRow = ({ details }) => {
+	const navigation = useNavigation();
+
 	return (
-		<View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #1</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #2</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.rowContainer}>
-				<TouchableOpacity>
-					<Text style={styles.rowTitle}>Topic #3</Text>
-					<Text style={styles.rowDescription}>
-						This is the description for the first topic. Let's put more
-						information about it here, but still keep it short.
-					</Text>
-				</TouchableOpacity>
-			</View>
+		<View style={styles.rowContainer}>
+			<TouchableOpacity
+				onPress={() => navigation.navigate("Questions", { details })}
+			>
+				<Text style={styles.rowTitle}>{details.title}</Text>
+				<Text style={styles.rowDescription}>{details.description}</Text>
+			</TouchableOpacity>
 		</View>
 	);
 };
 
 export default TopicRow;
+
 const styles = StyleSheet.create({
 	rowContainer: {
 		padding: 10,
