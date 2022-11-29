@@ -41,16 +41,41 @@ const QuestionScreen = () => {
 	// description = view
 	// question(*REF) === params.details.id
 	const addAnswer = async () => {
-		//if (side === true) {create answerAgree collection using params.details.id to reference and create a subcollection under that question}
-		const docRef = await addDoc(collection(db, "answers"), {
-			timestamp: serverTimestamp(),
-			user: user.uid,
-			matched: false,
-			side: side,
-			desc: view,
-			questionId: params.details.id,
-		});
-		console.log("Document written with ID: ", docRef.id);
+		let docRef;
+		if (side === true) {
+			const docRef = await addDoc(
+				collection(db, "questions", params.details.id, "answerAgree"),
+				{
+					timestamp: serverTimestamp(),
+					user: user.uid,
+					matched: false,
+					desc: view,
+					side: side,
+				}
+			);
+			console.log("Document written with ID: ", docRef.id);
+		} else {
+			const docRef = await addDoc(
+				collection(db, "questions", params.details.id, "answerDisagree"),
+				{
+					timestamp: serverTimestamp(),
+					user: user.uid,
+					matched: false,
+					desc: view,
+					side: side,
+				}
+			);
+			console.log("Document written with ID: ", docRef.id);
+		}
+
+		// const docRef = await addDoc(collection(db, "answers"), {
+		// 	timestamp: serverTimestamp(),
+		// 	user: user.uid,
+		// 	matched: false,
+		// 	side: side,
+		// 	desc: view,
+		// 	questionId: params.details.id,
+		// });
 	};
 	//create a match here > Conversation collection
 	//----
