@@ -1,4 +1,5 @@
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import {
 	Button,
@@ -13,6 +14,7 @@ import TopicList from "../components/TopicList";
 import { useAuth } from "../hooks/useAuth";
 
 const HomeScreen = () => {
+	const navigation = useNavigation();
 	const { logOut, loading, user } = useAuth();
 
 	return (
@@ -27,7 +29,7 @@ const HomeScreen = () => {
 						source={require("../assets/EsteemLogo.png")}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.navigate("Chat")}>
 					<Ionicons name="chatbubbles-sharp" size={30} color="#275473" />
 				</TouchableOpacity>
 			</View>
