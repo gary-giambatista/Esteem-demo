@@ -1,6 +1,21 @@
+import { async } from "@firebase/util";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import React, { useState } from "react";
+import {
+	addDoc,
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	limit,
+	onSnapshot,
+	orderBy,
+	query,
+	serverTimestamp,
+	setDoc,
+	updateDoc,
+	where,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
 	Button,
 	Keyboard,
@@ -22,12 +37,16 @@ const QuestionScreen = () => {
 	const { params } = useRoute();
 	const [view, setView] = useState("");
 	const [side, setSide] = useState(null);
+	//const [submitted, setSubmitted] = useState(null);  use to enforce only 1 submit at a time
+	//for settings the limit to 1, use setDoc instead of addDoc!
 
 	const pickSide = (side) => {
 		setSide(side);
 	};
 	const submitView = () => {
-		addAnswer();
+		// addAnswer();
+		findMatch();
+
 		console.log("Congrats! You submitted your view!");
 	};
 
@@ -42,6 +61,7 @@ const QuestionScreen = () => {
 	// question(*REF) === params.details.id
 	const addAnswer = async () => {
 		let docRef;
+		//setSubmitted(true); remember to add submitted: submitted into the create below
 		if (side === true) {
 			const docRef = await addDoc(
 				collection(db, "questions", params.details.id, "answerAgree"),
@@ -67,37 +87,111 @@ const QuestionScreen = () => {
 			);
 			console.log("Document written with ID: ", docRef.id);
 		}
-
-		// const docRef = await addDoc(collection(db, "answers"), {
-		// 	timestamp: serverTimestamp(),
-		// 	user: user.uid,
-		// 	matched: false,
-		// 	side: side,
-		// 	desc: view,
-		// 	questionId: params.details.id,
-		// });
 	};
-	//create a match here > Conversation collection
-	//----
-	//Option 0 -- see if quering with 3 constraints in possible
-	//option .5 -- see if composite groups can allow for 3 way query (2 definitely)
-
-	//Option #1 - use more calls if cannot (*difficult since 2 of the types are booleans)
-	//make answer have a complex data type containing a map of {matched: false, side: side} ??? use an array of 0 and 1 (false and true), then sort for 1
-	//isMatched function - DB call 1
-	//getSide function - DB call 2
-
-	//seems like the best option
-	// Option #2 -cannot query mutliple filters, may need to make a sub-collection for unmatched side(agree) and unmatched side(disagree) (also, can take advantage of data hierarchy and only query answers under a specific question, elminating 1 of the query constaints)
-	// use if statement to call a different create db function for each answer
-	// ALSO** consider where the answers collection is, for #2 maybe:
-	// questions > answersAgree && answersDisagree
-	// each answer will hold a matched boolean, desc, and user id
 
 	//query answers where: 3 constraints
 	//  matched == false
 	//  question == your question
 	//  agree !== your agree
+
+	// matching logic
+	// where to call the matching function? within the addAnswer function?
+
+	const findMatch = async () => {
+		if (side === true) {
+			const disagreeQuery = query(
+				collection(db, "questions", params.details.id, "answerDisagree"),
+				where("matched", "==", false),
+				orderBy("timestamp", "asc"),
+				limit(1)
+			);
+			const querySnapshot = await getDocs(disagreeQuery);
+			const queryData = querySnapshot.docs[0].data();
+			const queryAnswerId = querySnapshot.docs[0].id;
+			// console.log("answerID:", queryAnswerId);
+			// console.log("matchData:", queryData);
+
+			//update matched
+			await updateDoc(
+				doc(
+					db,
+					"questions",
+					params.details.id,
+					"answerDisagree",
+					queryAnswerId
+				),
+				{
+					matched: true,
+				}
+			);
+			return;
+		} else if (side === false) {
+			const agreeQuery = query(
+				collection(db, "questions", params.details.id, "answerAgree"),
+				where("matched", "==", false),
+				orderBy("timestamp", "asc"),
+				limit(1)
+			);
+			const querySnapshot = await getDocs(agreeQuery);
+			const queryData = querySnapshot.docs[0].data();
+			const queryAnswerId = querySnapshot.docs[0].id;
+
+			//update matched
+			await updateDoc(
+				doc(db, "questions", params.details.id, "answerAgree", queryAnswerId),
+				{
+					matched: true,
+				}
+			);
+			return;
+		} else matchData = false; //need to handle no match exists case
+		return console.log("Finished matching"); //no matches exist
+	};
+
+	// use queryData instead of matchData
+	//2. figure out how to reference the conversation when creating messages
+	const createConversation = async () => {
+		if (matchData) {
+			const matchRef = await addDoc(collection(db, "conversations"), {
+				timestamp: serverTimestamp(),
+				user1: user.uid,
+				user2: matchData.user,
+				answer1: view,
+				answer2: matchData.desc,
+			});
+			console.log("Document written with ID: ", matchRef.id);
+			//fetch doc.id
+			//create messages sub-collection
+			if (matchRef) {
+				const convoRef = await addDoc(
+					collection(db, "conversations", matchRef),
+					{
+						timestamp: serverTimestamp(),
+						user1: user.uid,
+						user2: matchData.user,
+						answer1: view,
+						answer2: matchData.desc,
+					}
+				);
+				console.log("Document written with ID: ", convoRef.id);
+			}
+		}
+	};
+
+	// add a modal screen onSubmit > modal checks if match exists > if so match screen which redirects to chat >  if not > different message which redirects to home
+
+	// QUERY
+	// if statement: if (side === true) {specific query}
+	// check opposing side's question(params.details.id)>!answerSIDE>matched==false
+
+	//CREATE conversation
+	// user1 == user.uid (active user)
+	// user2 == questions > answerAgree/answeDisagree userId
+	// question >> should be part of the query using questionId
+	// answer1 == view
+	// answer2 == questions > answerAgree/answeDisagree desc
+	// 2nd db call to create SUB collection: messages
+	//
 
 	// then
 	// KEEP in mind, references probably need to be separate DB calls
@@ -160,7 +254,11 @@ const QuestionScreen = () => {
 						value={view}
 					/>
 
-					<TouchableOpacity style={styles.submitButton} onPress={submitView}>
+					<TouchableOpacity
+						style={styles.submitButton}
+						onPress={submitView}
+						//disabled={submitted}
+					>
 						<Text style={styles.submitText}>Submit</Text>
 					</TouchableOpacity>
 				</KeyboardAvoidingView>
