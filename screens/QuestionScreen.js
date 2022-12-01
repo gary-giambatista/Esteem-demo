@@ -82,6 +82,7 @@ const QuestionScreen = () => {
 				{
 					timestamp: serverTimestamp(),
 					user: user.uid,
+					photoURL: user.photoURL,
 					matched: false,
 					desc: view,
 					side: side,
@@ -94,6 +95,7 @@ const QuestionScreen = () => {
 				{
 					timestamp: serverTimestamp(),
 					user: user.uid,
+					photoURL: user.photoURL,
 					matched: false,
 					desc: view,
 					side: side,
@@ -176,8 +178,8 @@ const QuestionScreen = () => {
 		if (queryData) {
 			const matchRef = await addDoc(collection(db, "conversations"), {
 				timestamp: serverTimestamp(),
-				user1: user.uid,
-				user2: queryData.user,
+				users: [user.uid, queryData.user],
+				user2PhotoURL: queryData.photoURL,
 				user1Side: side,
 				user2Side: queryData.side,
 				answer1: view,

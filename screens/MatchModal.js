@@ -9,7 +9,7 @@ import {
 	View,
 } from "react-native";
 
-const SearchingModalScreen = () => {
+const MatchModal = () => {
 	const navigation = useNavigation();
 
 	return (
@@ -29,7 +29,7 @@ const SearchingModalScreen = () => {
 	);
 };
 
-export default SearchingModalScreen;
+export default MatchModal;
 
 const styles = StyleSheet.create({
 	title: {
