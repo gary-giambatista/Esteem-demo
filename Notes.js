@@ -111,3 +111,27 @@ try {
 } catch (error) {
 	console.log(error);
 }
+
+// array of objects for messages, instead of 2 calls for initial messages
+const convoRef = await addDoc(
+	collection(db, "conversations", matchRef.id, "messages"),
+	{
+		timestamp: serverTimestamp(),
+		user1: user.uid,
+		user2: queryData.user,
+		answer1: view,
+		answer2: queryData.desc,
+		messages: [
+			{
+				timestamp: serverTimestamp(),
+				message: view,
+				user: user.uid,
+			},
+			{
+				timestamp: serverTimestamp(),
+				message: queryData.desc,
+				user: user.uid,
+			},
+		],
+	}
+);

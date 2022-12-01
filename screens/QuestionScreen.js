@@ -43,9 +43,12 @@ const QuestionScreen = () => {
 	const pickSide = (side) => {
 		setSide(side);
 	};
-	const submitView = () => {
-		// addAnswer();
+	const submitView = async () => {
+		await addAnswer();
+		//return false to symbolize no match
 		findMatch();
+		//return true to symbolize match
+		//use true/false to trigger different modal
 
 		console.log("Congrats! You submitted your view!");
 	};
@@ -106,25 +109,31 @@ const QuestionScreen = () => {
 				limit(1)
 			);
 			const querySnapshot = await getDocs(disagreeQuery);
-			const queryData = querySnapshot.docs[0].data();
-			const queryAnswerId = querySnapshot.docs[0].id;
-			// console.log("answerID:", queryAnswerId);
-			// console.log("matchData:", queryData);
 
-			//update matched
-			await updateDoc(
-				doc(
-					db,
-					"questions",
-					params.details.id,
-					"answerDisagree",
-					queryAnswerId
-				),
-				{
-					matched: true,
-				}
-			);
-			return;
+			if (querySnapshot === null || undefined || false) {
+				return console.log("there are no matches at the moment!");
+			} else {
+				//test (should return Looking for a match modal which redirects to home)
+				const queryData = querySnapshot.docs[0].data();
+				const queryAnswerId = querySnapshot.docs[0].id;
+				// console.log("answerID:", queryAnswerId);
+				// console.log("matchData:", queryData);
+
+				//update matched
+				await updateDoc(
+					doc(
+						db,
+						"questions",
+						params.details.id,
+						"answerDisagree",
+						queryAnswerId
+					),
+					{
+						matched: true,
+					}
+				);
+				return createConversation(queryData);
+			}
 		} else if (side === false) {
 			const agreeQuery = query(
 				collection(db, "questions", params.details.id, "answerAgree"),
@@ -132,6 +141,9 @@ const QuestionScreen = () => {
 				orderBy("timestamp", "asc"),
 				limit(1)
 			);
+			if (!agreeQuery) {
+				return console.log("there are no matches at the moment!");
+			} //test (should return Looking for a match modal which redirects to home)
 			const querySnapshot = await getDocs(agreeQuery);
 			const queryData = querySnapshot.docs[0].data();
 			const queryAnswerId = querySnapshot.docs[0].id;
@@ -143,41 +155,54 @@ const QuestionScreen = () => {
 					matched: true,
 				}
 			);
-			return;
+			return createConversation(queryData);
 		} else matchData = false; //need to handle no match exists case
 		return console.log("Finished matching"); //no matches exist
 	};
 
 	// use queryData instead of matchData
 	//2. figure out how to reference the conversation when creating messages
-	const createConversation = async () => {
-		if (matchData) {
+	const createConversation = async (queryData) => {
+		if (queryData) {
 			const matchRef = await addDoc(collection(db, "conversations"), {
 				timestamp: serverTimestamp(),
 				user1: user.uid,
-				user2: matchData.user,
+				user2: queryData.user,
+				user1Side: side,
+				user2Side: queryData.side,
 				answer1: view,
-				answer2: matchData.desc,
+				answer2: queryData.desc,
 			});
 			console.log("Document written with ID: ", matchRef.id);
-			//fetch doc.id
+			//fetch doc.id >> matchRef.id
 			//create messages sub-collection
 			if (matchRef) {
-				const convoRef = await addDoc(
-					collection(db, "conversations", matchRef),
+				const message1Ref = await addDoc(
+					collection(db, "conversations", matchRef.id, "messages"),
 					{
 						timestamp: serverTimestamp(),
-						user1: user.uid,
-						user2: matchData.user,
-						answer1: view,
-						answer2: matchData.desc,
+						user: user.uid,
+						side: side,
+						message: view,
 					}
 				);
-				console.log("Document written with ID: ", convoRef.id);
+				console.log("Document written with ID: ", message1Ref.id);
+				const message2Ref = await addDoc(
+					collection(db, "conversations", matchRef.id, "messages"),
+					{
+						timestamp: serverTimestamp(),
+						user: queryData.user,
+						side: queryData.side,
+						message: queryData.desc,
+					}
+				);
+				console.log("Document written with ID: ", message2Ref.id);
 			}
 		}
+		return console.log("conversation and messages created!");
 	};
-
+	//1 test if no-match if clause works on findMatch()
+	//add modals for 2 outcomes below
 	// add a modal screen onSubmit > modal checks if match exists > if so match screen which redirects to chat >  if not > different message which redirects to home
 
 	// QUERY
