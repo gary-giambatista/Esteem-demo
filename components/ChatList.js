@@ -6,14 +6,12 @@ const ChatList = () => {
 	const { user } = useAuth();
 	const [matches, setMatches] = useState(null);
 
-	//fetch matches and store to state
+	//fetch matches and store to state >> use onSnapShot for live updates
 
+	//add Flatlist that returns chatrow
 	return (
 		<View>
 			<Text>ChatList</Text>
-			<FlatList
-			//returns <ChatRow />
-			/>
 		</View>
 	);
 };

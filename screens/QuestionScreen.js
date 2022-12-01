@@ -47,6 +47,10 @@ const QuestionScreen = () => {
 		console.log("there are no matches at the moment!");
 		navigation.navigate("Searching");
 	};
+	const goToMatchModal = () => {
+		console.log("conversation and messages created!");
+		navigation.navigate("Match");
+	};
 	const pickSide = (side) => {
 		setSide(side);
 	};
@@ -204,7 +208,7 @@ const QuestionScreen = () => {
 				console.log("Document written with ID: ", message2Ref.id);
 			}
 		}
-		return console.log("conversation and messages created!");
+		return goToMatchModal(); //matched screen function
 	};
 	//1 test if no-match if clause works on findMatch()
 	//add modals for 2 outcomes below
