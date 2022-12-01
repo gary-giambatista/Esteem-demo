@@ -8,10 +8,10 @@ const ChatRow = ({ matchDetails }) => {
 	const navigation = useNavigation();
 	const { user } = useAuth();
 
-	//in my case, the 2nd user in users[] will always be the partner (and not the active user), so I can get(maybe query?) the users collection for that users photURL.
+	//in my case, the 2nd user in users[1] will always be the partner (and not the active user), so I can get(maybe query?) the users collection for that users photURL.
 	return (
 		<TouchableOpacity>
-			<Image />
+			<Text>testing</Text>
 		</TouchableOpacity>
 	);
 };

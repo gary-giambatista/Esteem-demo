@@ -135,3 +135,53 @@ const convoRef = await addDoc(
 		],
 	}
 );
+
+// old conversation db create
+const createConversation = async (queryData) => {
+	if (queryData) {
+		const matchRef = await addDoc(collection(db, "conversations"), {
+			timestamp: serverTimestamp(),
+			users: [user.uid, queryData.user],
+			user1: user.uid,
+			user2: queryData.user,
+			user2PhotoURL: queryData.photoURL,
+			user1Side: side,
+			user2Side: queryData.side,
+			answer1: view,
+			answer2: queryData.desc,
+		});
+		console.log("Document written with ID: ", matchRef.id);
+	}
+};
+
+// original idea mapping notes
+//1 test if no-match if clause works on findMatch()
+//add modals for 2 outcomes below
+// add a modal screen onSubmit > modal checks if match exists > if so match screen which redirects to chat >  if not > different message which redirects to home
+
+// QUERY
+// if statement: if (side === true) {specific query}
+// check opposing side's question(params.details.id)>!answerSIDE>matched==false
+
+//CREATE conversation
+// user1 == user.uid (active user)
+// user2 == questions > answerAgree/answeDisagree userId
+// question >> should be part of the query using questionId
+// answer1 == view
+// answer2 == questions > answerAgree/answeDisagree desc
+// 2nd db call to create SUB collection: messages
+//
+
+// then
+// KEEP in mind, references probably need to be separate DB calls
+//^^ possible create initially in answer and store in a varaible to avoid multiple db calls for the same variable
+//create collection: conversations
+// user1 == user.uid (active user)
+// user2 == questions > answerAgree/answeDisagree userId
+// question == params.details.id
+// answer 1 == view
+// answer 2 == questions > answerAgree/answeDisagree desc
+// 2nd db call to create SUB collection: messages
+//messages hold
+// answer 1 **store here or in messages collection???
+// answer 2 **probably here...

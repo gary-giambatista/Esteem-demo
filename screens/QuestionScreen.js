@@ -44,10 +44,12 @@ const QuestionScreen = () => {
 
 	//helper functions
 	const goToSearchingModal = () => {
+		addAnswer(false);
 		console.log("there are no matches at the moment!");
 		navigation.navigate("Searching");
 	};
 	const goToMatchModal = () => {
+		addAnswer(true);
 		console.log("conversation and messages created!");
 		navigation.navigate("Match");
 	};
@@ -55,12 +57,7 @@ const QuestionScreen = () => {
 		setSide(side);
 	};
 	const submitView = async () => {
-		// await addAnswer();
-		//return false to symbolize no match
 		findMatch();
-		//return true to symbolize match
-		//use true/false to trigger different modal
-
 		console.log("Congrats! You submitted your view!");
 	};
 
@@ -73,7 +70,7 @@ const QuestionScreen = () => {
 	// side === side(true/false)
 	// description = view
 	// question(*REF) === params.details.id
-	const addAnswer = async () => {
+	const addAnswer = async (didMatch) => {
 		let docRef;
 		//setSubmitted(true); remember to add submitted: submitted into the create below
 		if (side === true) {
@@ -81,9 +78,10 @@ const QuestionScreen = () => {
 				collection(db, "questions", params.details.id, "answerAgree"),
 				{
 					timestamp: serverTimestamp(),
-					user: user.uid,
-					photoURL: user.photoURL,
-					matched: false,
+					userId: user.uid,
+					matchedUsersPhoto: user.photoURL,
+					matched: didMatch,
+					questionTitle: params.details.title,
 					desc: view,
 					side: side,
 				}
@@ -94,9 +92,10 @@ const QuestionScreen = () => {
 				collection(db, "questions", params.details.id, "answerDisagree"),
 				{
 					timestamp: serverTimestamp(),
-					user: user.uid,
-					photoURL: user.photoURL,
-					matched: false,
+					userId: user.uid,
+					matchedUsersPhoto: user.photoURL,
+					matched: didMatch,
+					questionTitle: params.details.title,
 					desc: view,
 					side: side,
 				}
@@ -109,9 +108,6 @@ const QuestionScreen = () => {
 	//  matched == false
 	//  question == your question
 	//  agree !== your agree
-
-	// matching logic
-	// where to call the matching function? within the addAnswer function?
 
 	const findMatch = async () => {
 		if (side === true) {
@@ -178,12 +174,10 @@ const QuestionScreen = () => {
 		if (queryData) {
 			const matchRef = await addDoc(collection(db, "conversations"), {
 				timestamp: serverTimestamp(),
-				users: [user.uid, queryData.user],
-				user2PhotoURL: queryData.photoURL,
-				user1Side: side,
-				user2Side: queryData.side,
-				answer1: view,
-				answer2: queryData.desc,
+				userIds: [user.uid, queryData.userId],
+				user0PhotoURL: user.photoURL,
+				user1PhotoURL: queryData.matchedUsersPhoto,
+				questionTitle: queryData.questionTitle,
 			});
 			console.log("Document written with ID: ", matchRef.id);
 			//create messages sub-collection
@@ -192,7 +186,7 @@ const QuestionScreen = () => {
 					collection(db, "conversations", matchRef.id, "messages"),
 					{
 						timestamp: serverTimestamp(),
-						user: user.uid,
+						userId: user.uid,
 						side: side,
 						message: view,
 					}
@@ -202,7 +196,7 @@ const QuestionScreen = () => {
 					collection(db, "conversations", matchRef.id, "messages"),
 					{
 						timestamp: serverTimestamp(),
-						user: queryData.user,
+						userId: queryData.userId,
 						side: queryData.side,
 						message: queryData.desc,
 					}
@@ -212,36 +206,6 @@ const QuestionScreen = () => {
 		}
 		return goToMatchModal(); //matched screen function
 	};
-	//1 test if no-match if clause works on findMatch()
-	//add modals for 2 outcomes below
-	// add a modal screen onSubmit > modal checks if match exists > if so match screen which redirects to chat >  if not > different message which redirects to home
-
-	// QUERY
-	// if statement: if (side === true) {specific query}
-	// check opposing side's question(params.details.id)>!answerSIDE>matched==false
-
-	//CREATE conversation
-	// user1 == user.uid (active user)
-	// user2 == questions > answerAgree/answeDisagree userId
-	// question >> should be part of the query using questionId
-	// answer1 == view
-	// answer2 == questions > answerAgree/answeDisagree desc
-	// 2nd db call to create SUB collection: messages
-	//
-
-	// then
-	// KEEP in mind, references probably need to be separate DB calls
-	//^^ possible create initially in answer and store in a varaible to avoid multiple db calls for the same variable
-	//create collection: conversations
-	// user1 == user.uid (active user)
-	// user2 == questions > answerAgree/answeDisagree userId
-	// question == params.details.id
-	// answer 1 == view
-	// answer 2 == questions > answerAgree/answeDisagree desc
-	// 2nd db call to create SUB collection: messages
-	//messages hold
-	// answer 1 **store here or in messages collection???
-	// answer 2 **probably here...
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
