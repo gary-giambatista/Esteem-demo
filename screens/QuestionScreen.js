@@ -35,16 +35,23 @@ import { useAuth } from "../hooks/useAuth";
 const QuestionScreen = () => {
 	const { user } = useAuth();
 	const { params } = useRoute();
+	const navigation = useNavigation();
+	//state
 	const [view, setView] = useState("");
 	const [side, setSide] = useState(null);
 	//const [submitted, setSubmitted] = useState(null);  use to enforce only 1 submit at a time
 	//for settings the limit to 1, use setDoc instead of addDoc!
 
+	//helper functions
+	const goToSearchingModal = () => {
+		console.log("there are no matches at the moment!");
+		navigation.navigate("Searching");
+	};
 	const pickSide = (side) => {
 		setSide(side);
 	};
 	const submitView = async () => {
-		await addAnswer();
+		// await addAnswer();
 		//return false to symbolize no match
 		findMatch();
 		//return true to symbolize match
@@ -110,10 +117,10 @@ const QuestionScreen = () => {
 			);
 			const querySnapshot = await getDocs(disagreeQuery);
 
-			if (querySnapshot === null || undefined || false) {
-				return console.log("there are no matches at the moment!");
+			if (querySnapshot.empty) {
+				return goToSearchingModal();
+				//Looking for a match modal which redirects to home
 			} else {
-				//test (should return Looking for a match modal which redirects to home)
 				const queryData = querySnapshot.docs[0].data();
 				const queryAnswerId = querySnapshot.docs[0].id;
 				// console.log("answerID:", queryAnswerId);
@@ -141,27 +148,26 @@ const QuestionScreen = () => {
 				orderBy("timestamp", "asc"),
 				limit(1)
 			);
-			if (!agreeQuery) {
-				return console.log("there are no matches at the moment!");
-			} //test (should return Looking for a match modal which redirects to home)
 			const querySnapshot = await getDocs(agreeQuery);
-			const queryData = querySnapshot.docs[0].data();
-			const queryAnswerId = querySnapshot.docs[0].id;
+			if (querySnapshot.empty) {
+				return goToSearchingModal();
+				//Looking for a match modal which redirects to home
+			} else {
+				const queryData = querySnapshot.docs[0].data();
+				const queryAnswerId = querySnapshot.docs[0].id;
 
-			//update matched
-			await updateDoc(
-				doc(db, "questions", params.details.id, "answerAgree", queryAnswerId),
-				{
-					matched: true,
-				}
-			);
-			return createConversation(queryData);
-		} else matchData = false; //need to handle no match exists case
-		return console.log("Finished matching"); //no matches exist
+				//update matched
+				await updateDoc(
+					doc(db, "questions", params.details.id, "answerAgree", queryAnswerId),
+					{
+						matched: true,
+					}
+				);
+				return createConversation(queryData);
+			}
+		}
 	};
 
-	// use queryData instead of matchData
-	//2. figure out how to reference the conversation when creating messages
 	const createConversation = async (queryData) => {
 		if (queryData) {
 			const matchRef = await addDoc(collection(db, "conversations"), {
@@ -174,7 +180,6 @@ const QuestionScreen = () => {
 				answer2: queryData.desc,
 			});
 			console.log("Document written with ID: ", matchRef.id);
-			//fetch doc.id >> matchRef.id
 			//create messages sub-collection
 			if (matchRef) {
 				const message1Ref = await addDoc(
