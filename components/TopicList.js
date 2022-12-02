@@ -48,7 +48,7 @@ const TopicList = () => {
 			<FlatList
 				style={{ height: "100%" }}
 				data={questions}
-				renderItem={({ item }) => <TopicRow details={item} />}
+				renderItem={({ item }) => <TopicRow questionDetails={item} />}
 				keyExtractor={(item) => item.id}
 			/>
 		</View>

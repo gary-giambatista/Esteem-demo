@@ -15,7 +15,7 @@ const ChatList = () => {
 			onSnapshot(
 				query(
 					collection(db, "conversations"),
-					where("userIds", "array-contains", user.uid)
+					where("userIds", "array-contains", user.uid) //order by  last message??? (for keeping rows in timestamp order) need to fetch from a subcollection>> difficult
 				),
 				(snapshot) =>
 					setMatches(

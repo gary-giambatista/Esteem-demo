@@ -69,19 +69,19 @@ const QuestionScreen = () => {
 	// set matched === false
 	// side === side(true/false)
 	// description = view
-	// question(*REF) === params.details.id
+	// question(*REF) === params.questionDetails.id
 	const addAnswer = async (didMatch) => {
 		let docRef;
 		//setSubmitted(true); remember to add submitted: submitted into the create below
 		if (side === true) {
 			const docRef = await addDoc(
-				collection(db, "questions", params.details.id, "answerAgree"),
+				collection(db, "questions", params.questionDetails.id, "answerAgree"),
 				{
 					timestamp: serverTimestamp(),
 					userId: user.uid,
 					matchedUsersPhoto: user.photoURL,
 					matched: didMatch,
-					questionTitle: params.details.title,
+					questionTitle: params.questionDetails.title,
 					desc: view,
 					side: side,
 				}
@@ -89,13 +89,18 @@ const QuestionScreen = () => {
 			console.log("Document written with ID: ", docRef.id);
 		} else {
 			const docRef = await addDoc(
-				collection(db, "questions", params.details.id, "answerDisagree"),
+				collection(
+					db,
+					"questions",
+					params.questionDetails.id,
+					"answerDisagree"
+				),
 				{
 					timestamp: serverTimestamp(),
 					userId: user.uid,
 					matchedUsersPhoto: user.photoURL,
 					matched: didMatch,
-					questionTitle: params.details.title,
+					questionTitle: params.questionDetails.title,
 					desc: view,
 					side: side,
 				}
@@ -112,7 +117,12 @@ const QuestionScreen = () => {
 	const findMatch = async () => {
 		if (side === true) {
 			const disagreeQuery = query(
-				collection(db, "questions", params.details.id, "answerDisagree"),
+				collection(
+					db,
+					"questions",
+					params.questionDetails.id,
+					"answerDisagree"
+				),
 				where("matched", "==", false),
 				orderBy("timestamp", "asc"),
 				limit(1)
@@ -133,7 +143,7 @@ const QuestionScreen = () => {
 					doc(
 						db,
 						"questions",
-						params.details.id,
+						params.questionDetails.id,
 						"answerDisagree",
 						queryAnswerId
 					),
@@ -145,7 +155,7 @@ const QuestionScreen = () => {
 			}
 		} else if (side === false) {
 			const agreeQuery = query(
-				collection(db, "questions", params.details.id, "answerAgree"),
+				collection(db, "questions", params.questionDetails.id, "answerAgree"),
 				where("matched", "==", false),
 				orderBy("timestamp", "asc"),
 				limit(1)
@@ -160,7 +170,13 @@ const QuestionScreen = () => {
 
 				//update matched
 				await updateDoc(
-					doc(db, "questions", params.details.id, "answerAgree", queryAnswerId),
+					doc(
+						db,
+						"questions",
+						params.questionDetails.id,
+						"answerAgree",
+						queryAnswerId
+					),
 					{
 						matched: true,
 					}
@@ -169,7 +185,8 @@ const QuestionScreen = () => {
 			}
 		}
 	};
-
+	// want to add user.displayName to answer, and conversation
+	// EVEN better, add the user object to the answer, then create an object (instead of an array) of the 2 users below. Later use the user.uid key to get the correct profile picture like this: photoURL: matchDetails.users[user.uid].photoURL >> see HomeScreen line 155 in Einder for user object creation example
 	const createConversation = async (queryData) => {
 		if (queryData) {
 			const matchRef = await addDoc(collection(db, "conversations"), {
@@ -209,9 +226,11 @@ const QuestionScreen = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header title={params.details.title} />
-			<Text style={styles.title}>{params.details.title}</Text>
-			<Text style={styles.description}>{params.details.description}</Text>
+			<Header title={params.questionDetails.title} />
+			<Text style={styles.title}>{params.questionDetails.title}</Text>
+			<Text style={styles.description}>
+				{params.questionDetails.description}
+			</Text>
 			<View style={styles.buttonGroup}>
 				<TouchableOpacity
 					style={
