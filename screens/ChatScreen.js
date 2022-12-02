@@ -11,7 +11,6 @@ const ChatScreen = () => {
 		<SafeAreaView>
 			<Header title="Messages" />
 			<ChatList />
-			<Text>ChatScreen</Text>
 		</SafeAreaView>
 	);
 };

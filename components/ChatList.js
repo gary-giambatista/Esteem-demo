@@ -1,6 +1,6 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { db } from "../firebaseConfig";
 import { useAuth } from "../hooks/useAuth";
 import ChatRow from "./ChatRow";
@@ -40,9 +40,18 @@ const ChatList = () => {
 	) : (
 		// <Text>{matches[0].id}</Text>
 		<View>
-			<Text style={{ textAlign: "center" }}>No matches at the moment</Text>
+			<Text style={styles.noMatchText}>No matches at the moment</Text>
 		</View>
 	);
 };
 
 export default ChatList;
+
+const styles = StyleSheet.create({
+	noMatchText: {
+		textAlign: "center",
+		lineHeight: 28,
+		fontSize: 18,
+		fontWeight: "bold",
+	},
+});

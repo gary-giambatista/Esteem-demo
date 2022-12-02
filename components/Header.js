@@ -7,10 +7,10 @@ const Header = ({ title }) => {
 	const navigation = useNavigation();
 
 	return (
-		<View style={styles.headerContainer}>
+		<View style={[styles.headerContainer, styles.cardShadow]}>
 			<View style={styles.backAndTitleContainer}>
 				<TouchableOpacity
-					onPress={() => navigation.goBack()}
+					onPress={() => navigation.navigate("Home")}
 					style={{ padding: 5 }}
 				>
 					<Ionicons name="chevron-back-outline" size={34} color="black" />
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		borderBottomWidth: 1,
+		backgroundColor: "white",
 	},
 	backAndTitleContainer: {
 		display: "flex",
@@ -38,6 +38,17 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 		paddingLeft: 10,
+	},
+	cardShadow: {
+		shadowColor: "000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+
+		elevation: 2,
 	},
 });
 

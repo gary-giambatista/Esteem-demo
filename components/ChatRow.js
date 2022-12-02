@@ -1,19 +1,90 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Image, SafeAreaView, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-web";
+import {
+	collection,
+	limit,
+	onSnapshot,
+	orderBy,
+	query,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+	Image,
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+import { db } from "../firebaseConfig";
 import { useAuth } from "../hooks/useAuth";
 
 const ChatRow = ({ matchDetails }) => {
 	const navigation = useNavigation();
 	const { user } = useAuth();
 
-	//in my case, the 2nd user in users[1] will always be the partner (and not the active user), so I can get(maybe query?) the users collection for that users photURL.
+	const [lastMessage, setLastMessage] = useState("");
+
+	useEffect(() => {
+		onSnapshot(
+			query(
+				collection(db, "conversations", matchDetails.id, "messages"),
+				orderBy("timestamp", "desc"),
+				limit(1)
+			),
+			(snapshot) => setLastMessage(snapshot.docs[0]?.data()?.message)
+		);
+	}, [db, matchDetails]);
+
 	return (
-		<SafeAreaView stlye={{ flex: 1 }}>
-			<Text style={{ alignItems: "center" }}>{matchDetails.id}</Text>
-		</SafeAreaView>
+		<TouchableOpacity
+			onPress={() => navigation.navigate("Home")}
+			style={[styles.rowContainer, styles.cardShadow]}
+		>
+			<Image
+				style={styles.photoURL}
+				source={
+					matchDetails.userIds[0] === user.uid
+						? { uri: matchDetails?.user0PhotoURL }
+						: { uri: matchDetails?.user1PhotoURL }
+				}
+			/>
+			<View>
+				<Text style={styles.questionTitle}>{matchDetails?.questionTitle}</Text>
+				<Text>{lastMessage || "Say Hi!"}</Text>
+			</View>
+		</TouchableOpacity>
 	);
 };
 
 export default ChatRow;
+
+const styles = StyleSheet.create({
+	rowContainer: {
+		padding: 10,
+		margin: 10,
+		flexDirection: "row",
+		backgroundColor: "white",
+	},
+	cardShadow: {
+		shadowColor: "000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+
+		elevation: 2,
+	},
+	photoURL: {
+		borderRadius: 9999,
+		height: 64,
+		width: 64,
+		marginRight: 16,
+	},
+	questionTitle: {
+		lineHeight: 28,
+		fontSize: 18,
+		fontWeight: "bold",
+	},
+});
