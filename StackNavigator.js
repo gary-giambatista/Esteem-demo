@@ -26,10 +26,10 @@ const StackNavigator = () => {
 						<Stack.Screen name="Home" component={HomeScreen} />
 						<Stack.Screen name="Questions" component={QuestionScreen} />
 						<Stack.Screen name="Chat" component={ChatScreen} />
+						<Stack.Screen name="Match" component={MatchModal} />
 					</Stack.Group>
 					<Stack.Group screenOptions={{ presentation: "modal" }}>
 						<Stack.Screen name="Searching" component={SearchingModalScreen} />
-						<Stack.Screen name="Match" component={MatchModal} />
 					</Stack.Group>
 				</>
 			) : (

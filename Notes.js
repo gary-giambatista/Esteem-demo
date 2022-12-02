@@ -185,3 +185,17 @@ const createConversation = async (queryData) => {
 //messages hold
 // answer 1 **store here or in messages collection???
 // answer 2 **probably here...
+
+[
+	{
+		id: "C0jQDJyxPucNKg1uspnx",
+		questionTitle: "Title #1",
+		timestamp: [Object],
+		user0PhotoURL:
+			"https://lh3.googleusercontent.com/a/ALm5wu3X-egFwQRg62cuA6L3RLgZ2b80SXWotRHLTPtrTX4=s96-c",
+		user1PhotoURL:
+			"https://lh3.googleusercontent.com/a/ALm5wu3X-egFwQRg62cuA6L3RLgZ2b80SXWotRHLTPtrTX4=s96-c",
+		userIds: ["B9qv1k1oY7NYVvTNWpfHTkWjSfJ3", "B9qv1k1oY7NYVvTNWpfHTkWjSfJ3"],
+	},
+];
+matches[0].userIds[0];
