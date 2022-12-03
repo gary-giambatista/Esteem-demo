@@ -24,6 +24,8 @@ import {
 	View,
 } from "react-native";
 import Header from "../components/Header";
+import ReceiverMessage from "../components/ReceiverMessage";
+import SenderMessage from "../components/SenderMessage";
 import { db } from "../firebaseConfig";
 import { useAuth } from "../hooks/useAuth";
 
@@ -63,6 +65,11 @@ const MessageScreen = () => {
 				timestamp: serverTimestamp(),
 				userId: user.uid,
 				message: input,
+				side:
+					(messages[0].userId === user.uid && messages[0].side) ||
+					(messages[1].userId === user.uid && messages[1].side)
+						? true
+						: false,
 			}
 		);
 
@@ -72,12 +79,29 @@ const MessageScreen = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header title={params.matchDetails.questionTitle} goBack={true} />
-			<Text>{JSON.stringify(messages)}</Text>
+			{/* <Text>{JSON.stringify(messages)}</Text> */}
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"} //configure screen correctly on different device OS
 				style={{ flex: 1 }}
 				keyboardVerticalOffset={10}
 			>
+				<FlatList
+					inverted={-1} //make the chat come from top down
+					style={{ paddingLeft: 10 }}
+					data={messages}
+					keyExtractor={(item) => item.id}
+					renderItem={({ item }) =>
+						item.userId === user.uid ? (
+							<SenderMessage messageBubble={item} />
+						) : (
+							<ReceiverMessage
+								messageBubble={item}
+								matchDetails={params.matchDetails}
+							/>
+						)
+					}
+				/>
+
 				<View style={styles.inputContainer}>
 					<TextInput
 						style={styles.messageInput}

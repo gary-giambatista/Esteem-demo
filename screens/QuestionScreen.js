@@ -222,6 +222,8 @@ const QuestionScreen = () => {
 		}
 		return goToMatchModal(); //matched screen function
 	};
+	//to add in colored side messages, just remove side from the answerDisagree, and write a conditional in Receiver/SenderMessage like this:
+	//{message.agreeSide ? color1 : color2} renaming side > agreeSide
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
