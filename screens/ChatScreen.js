@@ -9,7 +9,7 @@ const ChatScreen = () => {
 
 	return (
 		<SafeAreaView>
-			<Header title="Messages" />
+			<Header title="Messages" goBack={false} />
 			<ChatList />
 		</SafeAreaView>
 	);

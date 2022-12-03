@@ -6,6 +6,7 @@ import ChatScreen from "./screens/ChatScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import MatchModal from "./screens/MatchModal";
+import MessageScreen from "./screens/MessageScreen";
 import QuestionScreen from "./screens/QuestionScreen";
 import SearchingModalScreen from "./screens/SearchingModalScreen";
 
@@ -26,6 +27,7 @@ const StackNavigator = () => {
 						<Stack.Screen name="Home" component={HomeScreen} />
 						<Stack.Screen name="Questions" component={QuestionScreen} />
 						<Stack.Screen name="Chat" component={ChatScreen} />
+						<Stack.Screen name="Message" component={MessageScreen} />
 						<Stack.Screen name="Match" component={MatchModal} />
 					</Stack.Group>
 					<Stack.Group screenOptions={{ presentation: "modal" }}>

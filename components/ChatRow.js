@@ -37,7 +37,7 @@ const ChatRow = ({ matchDetails }) => {
 
 	return (
 		<TouchableOpacity
-			onPress={() => navigation.navigate("Home")}
+			onPress={() => navigation.navigate("Message", { matchDetails })}
 			style={[styles.rowContainer, styles.cardShadow]}
 		>
 			<Image

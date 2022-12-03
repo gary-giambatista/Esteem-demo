@@ -3,14 +3,18 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Header = ({ title }) => {
+const Header = ({ title, goBack }) => {
 	const navigation = useNavigation();
 
 	return (
 		<View style={[styles.headerContainer, styles.cardShadow]}>
 			<View style={styles.backAndTitleContainer}>
 				<TouchableOpacity
-					onPress={() => navigation.navigate("Home")}
+					onPress={
+						goBack
+							? () => navigation.goBack()
+							: () => navigation.navigate("Home")
+					}
 					style={{ padding: 5 }}
 				>
 					<Ionicons name="chevron-back-outline" size={34} color="black" />
