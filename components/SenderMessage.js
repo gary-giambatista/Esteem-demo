@@ -2,8 +2,15 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 const SenderMessage = ({ messageBubble }) => {
+	const side = messageBubble.side;
+
 	return (
-		<View style={styles.messageContainer}>
+		<View
+			style={[
+				styles.messageContainer,
+				side ? { backgroundColor: "green" } : { backgroundColor: "red" },
+			]}
+		>
 			<Text style={{ color: "white" }}>{messageBubble.message}</Text>
 		</View>
 	);
@@ -15,8 +22,6 @@ const styles = StyleSheet.create({
 	messageContainer: {
 		alignSelf: "flex-start",
 		marginLeft: "auto",
-		backgroundColor: "red",
-		// backgroundColor: messageBubble.side ? "green" : "red",
 		padding: 10,
 		margin: 10,
 		flexDirection: "row",

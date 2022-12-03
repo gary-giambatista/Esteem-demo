@@ -4,20 +4,28 @@ import { useAuth } from "../hooks/useAuth";
 
 const ReceiverMessage = ({ messageBubble, matchDetails }) => {
 	const { user } = useAuth();
-	console.log(matchDetails);
+	const side = messageBubble.side;
 
+	// console.log(matchDetails.user0PhotoURL);
 	return (
-		<View style={styles.messageContainer}>
+		<View style={{ flexDirection: "row" }}>
 			<Image
-				stlye={styles.photoURL}
-				// source={
-				// 	matchDetails.userIds[0] === user.uid
-				// 		/? { uri: matchDetails?.user0PhotoURL }
-				// 		: { uri: matchDetails?.user1PhotoURL }
-				// }
-				source={{ uri: user.photoURL }}
+				style={styles.what}
+				source={
+					matchDetails.userIds[0] === user.uid
+						? { uri: matchDetails?.user0PhotoURL }
+						: { uri: matchDetails?.user1PhotoURL }
+				}
+				// source={require("../assets/favicon.png")}
 			/>
-			<Text style={{ color: "white" }}>{messageBubble.message}</Text>
+			<View
+				style={[
+					styles.messageContainer,
+					side ? { backgroundColor: "green" } : { backgroundColor: "red" },
+				]}
+			>
+				<Text style={{ color: "white" }}>{messageBubble.message}</Text>
+			</View>
 		</View>
 	);
 };
@@ -27,14 +35,13 @@ const styles = StyleSheet.create({
 	messageContainer: {
 		alignSelf: "flex-start",
 		backgroundColor: "green",
-		// backgroundColor: messageBubble.side ? "green" : "red",
 		padding: 10,
 		margin: 10,
 		flexDirection: "row",
 		borderRadius: 10,
 		borderTopLeftRadius: "none",
 	},
-	photoURL: {
+	what: {
 		height: 48,
 		width: 48,
 		borderRadius: 9999,
