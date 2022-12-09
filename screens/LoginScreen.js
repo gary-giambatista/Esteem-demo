@@ -32,7 +32,16 @@ const LoginScreen = () => {
 						<Text style={styles.logoText}>Esteem</Text>
 					</View>
 					<TouchableOpacity style={styles.loginButton} onPress={googleSignIn}>
-						<Text style={{ textAlign: "center" }}> Login </Text>
+						<Text
+							style={{
+								textAlign: "center",
+								fontFamily: "quicksand-body",
+								letterSpacing: 1,
+							}}
+						>
+							{" "}
+							Login{" "}
+						</Text>
 					</TouchableOpacity>
 				</View>
 			</ImageBackground>
@@ -58,7 +67,7 @@ const styles = StyleSheet.create({
 		display: "flex",
 		width: "100%",
 		flexDirection: "row",
-		// backgroundColor: "red",
+		// backgroundColor: "black",
 		alignItems: "center",
 		justifyContent: "center",
 		paddingRight: 10,
@@ -70,8 +79,9 @@ const styles = StyleSheet.create({
 		// marginTop: 300, // positioning the logo
 	},
 	logoText: {
+		fontFamily: "pacifico-logo",
 		fontSize: 46,
-		marginLeft: 20,
+		marginLeft: 10,
 		color: "white",
 	},
 	loginButton: {

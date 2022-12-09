@@ -21,6 +21,7 @@ import {
 	Keyboard,
 	KeyboardAvoidingView,
 	SafeAreaView,
+	ScrollView,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -226,11 +227,20 @@ const QuestionScreen = () => {
 	//{message.agreeSide ? color1 : color2} renaming side > agreeSide
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<Header title={params.questionDetails.title} goBack={false} />
-			<Text style={styles.title}>{params.questionDetails.title}</Text>
-			<Text style={styles.description}>
-				{params.questionDetails.description}
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			keyboardShouldPersistTaps="handled"
+			style={{ flex: 1 }}
+		>
+			<Header title="More Topics" goBack={false} />
+			<View style={[styles.questionContainer, styles.cardShadow]}>
+				<Text style={styles.title}>{params.questionDetails.title}</Text>
+				<Text style={styles.description}>
+					{params.questionDetails.description}
+				</Text>
+			</View>
+			<Text style={styles.callToAction}>
+				What do you think?{"\n"} Pick and side and find a partner to discuss!
 			</Text>
 			<View style={styles.buttonGroup}>
 				<TouchableOpacity
@@ -283,59 +293,77 @@ const QuestionScreen = () => {
 					</TouchableOpacity>
 				</KeyboardAvoidingView>
 			) : null}
-		</SafeAreaView>
+		</ScrollView>
 	);
 };
 
 export default QuestionScreen;
 
 const styles = StyleSheet.create({
+	questionContainer: {
+		margin: 10,
+		backgroundColor: "white",
+	},
 	title: {
-		fontSize: 20,
-		padding: 10,
+		padding: 20,
+		paddingTop: 30,
+		paddingBottom: 0,
+		fontSize: 25,
+		fontFamily: "quicksand-semi",
+		// borderWidth: 1,
+		// borderBottomColor: "grey",
 	},
 	description: {
-		fontSize: 15,
-		padding: 10,
+		padding: 20,
+		fontSize: 18,
+		fontFamily: "quicksand-body",
+	},
+	callToAction: {
+		padding: 20,
+		paddingTop: 10,
+		fontSize: 14,
+		fontFamily: "quicksand-body",
+		textAlign: "center",
 	},
 	buttonGroup: {
 		flexDirection: "row",
 		justifyContent: "space-evenly",
 		alignItems: "center",
-		paddingTop: 20,
+		paddingTop: 10,
 		paddingBottom: 20,
 	},
 	buttons: {
 		padding: 10,
-		width: 130,
+		width: 150,
 		backgroundColor: "grey",
-		borderRadius: 10,
+		borderRadius: 200,
 	},
 	agreeButton: {
-		backgroundColor: "green",
+		backgroundColor: "#039E43",
 	},
 	disagreeButton: {
-		backgroundColor: "#FF5864",
+		backgroundColor: "#FF5D52",
 	},
 	selectedButtonAgree: {
 		padding: 10,
-		width: 130,
+		width: 150,
 		backgroundColor: "white",
-		borderRadius: 10,
-		borderColor: "green",
+		borderRadius: 200,
+		borderColor: "#039E43",
 		borderWidth: 2,
 	},
 	selectedButtonDisagree: {
 		padding: 10,
-		width: 130,
+		width: 150,
 		backgroundColor: "white",
-		borderRadius: 10,
-		borderColor: "#FF5864",
+		borderRadius: 200,
+		borderColor: "#FF5D52",
 		borderWidth: 2,
 	},
 	buttonText: {
 		fontSize: 20,
 		textAlign: "center",
+		fontFamily: "quicksand-body",
 	},
 	input: {
 		padding: 10,
@@ -365,5 +393,16 @@ const styles = StyleSheet.create({
 	submitText: {
 		color: "white",
 		fontSize: 16,
+	},
+	cardShadow: {
+		shadowColor: "000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+
+		elevation: 2,
 	},
 });

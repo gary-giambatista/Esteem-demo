@@ -199,3 +199,13 @@ const createConversation = async (queryData) => {
 	},
 ];
 matches[0].userIds[0];
+
+//android keystore
+// Configuration: Android Preview (Default)
+// Keystore
+// Type                JKS
+// Key Alias           336db3080ea38a6f1a165410b4c98e40
+// MD5 Fingerprint     11:CE:37:4F:48:5A:F4:D3:DC:06:76:BF:18:08:6D:F6
+// SHA1 Fingerprint    C1:85:F4:D0:FE:19:62:87:5C:DB:CA:28:83:E6:53:D6:C0:C9:6F:C2
+// SHA256 Fingerprint  7A:B9:EF:DB:05:A2:29:81:4D:73:F0:7D:53:20:C7:70:B8:62:AA:BA:53:65:CB:AD:8D:AF:70:83:F0:AC:50:DC
+// Updated             3 seconds ago

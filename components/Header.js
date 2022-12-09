@@ -32,6 +32,8 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		backgroundColor: "white",
+		height: 105,
+		paddingTop: 50,
 	},
 	backAndTitleContainer: {
 		display: "flex",

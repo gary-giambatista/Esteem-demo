@@ -8,10 +8,10 @@ const ChatScreen = () => {
 	const navigation = useNavigation();
 
 	return (
-		<SafeAreaView>
+		<View>
 			<Header title="Messages" goBack={false} />
 			<ChatList />
-		</SafeAreaView>
+		</View>
 	);
 };
 

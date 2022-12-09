@@ -77,7 +77,7 @@ const MessageScreen = () => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<View style={{ flex: 1 }}>
 			<Header title={params.matchDetails.questionTitle} goBack={true} />
 			{/* <Text>{JSON.stringify(messages)}</Text> */}
 			<KeyboardAvoidingView
@@ -113,7 +113,7 @@ const MessageScreen = () => {
 					<Button onPress={sendMessage} title="Send" color="blue" />
 				</View>
 			</KeyboardAvoidingView>
-		</SafeAreaView>
+		</View>
 	);
 };
 
@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		padding: 10,
 		margin: 10,
+		marginBottom: 35,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",

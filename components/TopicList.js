@@ -12,15 +12,17 @@ import {
 	where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { db } from "../firebaseConfig";
 import TopicRow from "./TopicRow";
 
 const TopicList = () => {
 	const [questions, setQuestions] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const questionCollectionRef = collection(db, "questions");
 
 	useEffect(() => {
+		setLoading(true);
 		const fetchQuestions = async () => {
 			const querySnapshot = await getDocs(collection(db, "questions"));
 			const tempQuestions = [];
@@ -38,6 +40,7 @@ const TopicList = () => {
 		};
 
 		fetchQuestions();
+		setLoading(false);
 	}, [db]);
 
 	// console.log("HERE IS THE STATE", questions.length);
@@ -45,12 +48,16 @@ const TopicList = () => {
 
 	return (
 		<View>
-			<FlatList
-				style={{ height: "100%" }}
-				data={questions}
-				renderItem={({ item }) => <TopicRow questionDetails={item} />}
-				keyExtractor={(item) => item.id}
-			/>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : (
+				<FlatList
+					style={{ height: "100%" }}
+					data={questions}
+					renderItem={({ item }) => <TopicRow questionDetails={item} />}
+					keyExtractor={(item) => item.id}
+				/>
+			)}
 		</View>
 	);
 };

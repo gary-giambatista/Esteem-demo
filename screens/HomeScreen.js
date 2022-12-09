@@ -30,10 +30,14 @@ const HomeScreen = () => {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={() => navigation.navigate("Chat")}>
-					<Ionicons name="chatbubbles-sharp" size={30} color="#275473" />
+					<Ionicons
+						name="ios-chatbubble-ellipses-sharp"
+						size={30}
+						color="#FA423B"
+					/>
 				</TouchableOpacity>
 			</View>
-			<View style={styles.pageTitle}>
+			<View style={styles.pageTitleContainer}>
 				<Text style={styles.pageTitle}>Discussion Topics</Text>
 			</View>
 			<TopicList />
@@ -62,14 +66,28 @@ const styles = StyleSheet.create({
 		width: 40,
 		//#6acdf4
 	},
-	pageTitle: {
+	pageTitleContainer: {
 		alignItems: "center",
 		justifyContent: "center",
+		marginTop: 15,
+		borderBottomWidth: 1,
+		borderBottomColor: "grey",
+	},
+	pageTitle: {
+		fontFamily: "quicksand-semi",
 		fontSize: 30,
-		marginTop: 10,
-		marginBottom: 10,
-		borderBottomWidth: 2,
-		borderBottomColor: "#275473",
-		fontSize: 30,
+		marginBottom: 15,
+		// backgroundColor: "#ffffff",
+	},
+	cardShadow: {
+		shadowColor: "000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+
+		elevation: 2,
 	},
 });
