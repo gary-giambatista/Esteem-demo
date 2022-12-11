@@ -3,6 +3,17 @@
 		"name": "Esteem-Demo",
 		"slug": "esteem-demo",
 		"version": "1.0.0",
+		"plugins": [
+			"@react-native-google-signin/google-signin",
+			[
+				"expo-build-properties",
+				{
+					"ios": {
+						"useFrameworks": "static"
+					}
+				}
+			]
+		],
 		"orientation": "portrait",
 		"icon": "./assets/EsteemLogo.png",
 		"userInterfaceStyle": "light",
@@ -20,6 +31,7 @@
 		},
 		"android": {
 			"package": "com.ggg3.esteem_demo",
+			"googleServicesFile": "./google-services.json",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#FFFFFF"

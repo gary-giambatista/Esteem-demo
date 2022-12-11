@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 
 const LoginScreen = () => {
-	const { googleSignIn, loading } = useAuth();
+	const { onGoogleButtonPress, loading } = useAuth();
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -31,7 +31,10 @@ const LoginScreen = () => {
 						/>
 						<Text style={styles.logoText}>Esteem</Text>
 					</View>
-					<TouchableOpacity style={styles.loginButton} onPress={googleSignIn}>
+					<TouchableOpacity
+						style={styles.loginButton}
+						onPress={onGoogleButtonPress}
+					>
 						<Text
 							style={{
 								textAlign: "center",
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
 	},
 	logo: {
 		height: 80,
-		width: 76,
+		width: 80,
 		// marginBottom: 50, // positioning the logo
 		// marginTop: 300, // positioning the logo
 	},

@@ -1,6 +1,8 @@
 // import { StatusBar } from "expo-status-bar";
 // import { StyleSheet, Text, View } from "react-native";
 
+import { Easing } from "react-native";
+
 // export default function App() {
 // 	return (
 // 		<View style={styles.container}>
@@ -209,3 +211,32 @@ matches[0].userIds[0];
 // SHA1 Fingerprint    C1:85:F4:D0:FE:19:62:87:5C:DB:CA:28:83:E6:53:D6:C0:C9:6F:C2
 // SHA256 Fingerprint  7A:B9:EF:DB:05:A2:29:81:4D:73:F0:7D:53:20:C7:70:B8:62:AA:BA:53:65:CB:AD:8D:AF:70:83:F0:AC:50:DC
 // Updated             3 seconds ago
+
+// Configuration: development
+// Keystore
+// Type                JKS
+// Key Alias           ac981d9045b6f83a2d1d80cc607fd71b
+// MD5 Fingerprint     1D:BA:FD:75:99:C3:89:C8:92:6F:40:72:DD:7E:71:95
+// SHA1 Fingerprint    C3:B1:74:BD:03:6D:B9:69:72:19:C8:2D:50:2F:46:93:27:48:05:8A
+// SHA256 Fingerprint  F1:8C:A2:D6:06:66:3F:5B:B8:69:6D:56:9E:4C:11:AB:13:7D:6D:E3:8C:1F:D8:0A:7B:0E:B5:3B:33:B4:90:6A
+// Updated             15 seconds ago
+
+// old eas.json
+// {
+// 	"build": {
+// 		"preview": {
+// 			"android": {
+// 				"buildType": "apk"
+// 			}
+// 		},
+// 		"preview2": {
+// 			"android": {
+// 				"gradleCommand": ":app:assembleRelease"
+// 			}
+// 		},
+// 		"preview3": {
+// 			"developmentClient": true
+// 		},
+// 		"production": {}
+// 	}
+// }
