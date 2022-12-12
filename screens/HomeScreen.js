@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
 		borderRadius: 9999,
 	},
 	HeaderContainer: {
+		paddingTop: 20,
 		paddingLeft: 15,
 		paddingRight: 15,
 		display: "flex",

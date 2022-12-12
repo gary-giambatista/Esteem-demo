@@ -1,11 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import {
-	collection,
-	limit,
-	onSnapshot,
-	orderBy,
-	query,
-} from "firebase/firestore";
+// import {
+// 	collection,
+// 	limit,
+// 	onSnapshot,
+// 	orderBy,
+// 	query,
+// } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
+import { orderBy } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
 	Image,
@@ -24,16 +26,29 @@ const ChatRow = ({ matchDetails }) => {
 
 	const [lastMessage, setLastMessage] = useState("");
 
+	// useEffect(() => {
+	// 	onSnapshot(
+	// 		query(
+	// 			collection(db, "conversations", matchDetails.id, "messages"),
+	// 			orderBy("timestamp", "desc"),
+	// 			limit(1)
+	// 		),
+	// 		(snapshot) => setLastMessage(snapshot.docs[0]?.data()?.message)
+	// 	);
+	// }, [db, matchDetails]);
+
 	useEffect(() => {
-		onSnapshot(
-			query(
-				collection(db, "conversations", matchDetails.id, "messages"),
-				orderBy("timestamp", "desc"),
-				limit(1)
-			),
-			(snapshot) => setLastMessage(snapshot.docs[0]?.data()?.message)
-		);
-	}, [db, matchDetails]);
+		firestore()
+			.collection("conversations")
+			.doc(matchDetails.id)
+			.collection("messages")
+			.orderBy("timestamp", "desc")
+			.limit(1)
+			.get()
+			.then((querySnapshot) => {
+				setLastMessage(querySnapshot.docs[0]?.data()?.message);
+			});
+	}, [matchDetails]);
 
 	return (
 		<TouchableOpacity

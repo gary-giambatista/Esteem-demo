@@ -1,4 +1,5 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+// import { collection, onSnapshot, query, where } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { db } from "../firebaseConfig";
@@ -10,24 +11,38 @@ const ChatList = () => {
 	const [matches, setMatches] = useState([]);
 
 	//fetch matches and store to state >> use onSnapShot for live updates
-	useEffect(
-		() =>
-			onSnapshot(
-				query(
-					collection(db, "conversations"),
-					where("userIds", "array-contains", user.uid)
-				),
-				(snapshot) =>
-					setMatches(
-						snapshot.docs.map((doc) => ({
-							id: doc.id,
-							...doc.data(),
-						}))
-					)
-			),
-		[user]
-	);
+	// useEffect(
+	// 	() =>
+	// 		onSnapshot(
+	// 			query(
+	// 				collection(db, "conversations"),
+	// 				where("userIds", "array-contains", user.uid)
+	// 			),
+	// 			(snapshot) =>
+	// 				setMatches(
+	// 					snapshot.docs.map((doc) => ({
+	// 						id: doc.id,
+	// 						...doc.data(),
+	// 					}))
+	// 				)
+	// 		),
+	// 	[user]
+	// );
 	// console.log(matches);
+
+	useEffect(() => {
+		firestore()
+			.collection("conversations")
+			.where("userIds", "array-contains", user.uid)
+			.onSnapshot((snapshot) => {
+				setMatches(
+					snapshot.docs.map((doc) => ({
+						id: doc.id,
+						...doc.data(),
+					}))
+				);
+			});
+	}, [user]);
 
 	return matches.length > 0 ? (
 		//map out the ChatRow's here for each match

@@ -1,3 +1,4 @@
+import firestore from "@react-native-firebase/firestore";
 import {
 	collection,
 	deleteDoc,
@@ -19,12 +20,12 @@ import TopicRow from "./TopicRow";
 const TopicList = () => {
 	const [questions, setQuestions] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const questionCollectionRef = collection(db, "questions");
+	// const questionCollectionRef = collection(db, "questions");
 
 	useEffect(() => {
 		setLoading(true);
 		const fetchQuestions = async () => {
-			const querySnapshot = await getDocs(collection(db, "questions"));
+			const querySnapshot = await firestore().collection("questions").get();
 			const tempQuestions = [];
 			querySnapshot.forEach((doc) => {
 				// console.log(doc.id, " => ", doc.data());
@@ -41,7 +42,29 @@ const TopicList = () => {
 
 		fetchQuestions();
 		setLoading(false);
-	}, [db]);
+	}, []);
+
+	// useEffect(() => {
+	// 	setLoading(true);
+	// 	const fetchQuestions = async () => {
+	// 		const querySnapshot = await getDocs(collection(db, "questions"));
+	// 		const tempQuestions = [];
+	// 		querySnapshot.forEach((doc) => {
+	// 			// console.log(doc.id, " => ", doc.data());
+	// 			const { title, description } = doc.data();
+
+	// 			tempQuestions.push({
+	// 				id: doc.id,
+	// 				title,
+	// 				description,
+	// 			});
+	// 		});
+	// 		setQuestions(tempQuestions);
+	// 	};
+
+	// 	fetchQuestions();
+	// 	setLoading(false);
+	// }, [db]);
 
 	// console.log("HERE IS THE STATE", questions.length);
 	// console.log("HERE IS THE STATE", questions);
