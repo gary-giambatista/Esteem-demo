@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 		flexDirection: "row",
 		borderRadius: 10,
-		borderTopRightRadius: "none",
+		borderTopRightRadius: 0,
 	},
 	photoURL: {
 		height: 48,

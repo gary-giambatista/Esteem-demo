@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 		flexDirection: "row",
 		borderRadius: 10,
-		borderTopLeftRadius: "none",
+		borderTopLeftRadius: 0,
 	},
 	what: {
 		height: 48,

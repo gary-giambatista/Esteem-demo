@@ -1,13 +1,14 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import {
-	addDoc,
-	collection,
-	onSnapshot,
-	orderBy,
-	query,
-	serverTimestamp,
-	where,
-} from "firebase/firestore";
+// import {
+// 	addDoc,
+// 	collection,
+// 	onSnapshot,
+// 	orderBy,
+// 	query,
+// 	serverTimestamp,
+// 	where,
+// } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
 	Button,
@@ -37,31 +38,88 @@ const MessageScreen = () => {
 	const [input, setInput] = useState("");
 	const [messages, setMessages] = useState([]); //array of objects
 
-	//FETCH MESSAGE
-	useEffect(
-		() =>
-			onSnapshot(
-				query(
-					collection(db, "conversations", params.matchDetails.id, "messages"),
-					orderBy("timestamp", "desc")
-				),
-				(snapshot) =>
-					setMessages(
-						snapshot.docs.map((doc) => ({
-							id: doc.id,
-							...doc.data(),
-						}))
-					)
-			),
-		[params.matchDetails, db]
-	);
+	// FETCH MESSAGE
+	// useEffect(
+	// 	() =>
+	// 		onSnapshot(
+	// 			query(
+	// 				collection(db, "conversations", params.matchDetails.id, "messages"),
+	// 				orderBy("timestamp", "desc")
+	// 			),
+	// 			(snapshot) =>
+	// 				setMessages(
+	// 					snapshot.docs.map((doc) => ({
+	// 						id: doc.id,
+	// 						...doc.data(),
+	// 					}))
+	// 				)
+	// 		),
+	// 	[params.matchDetails, db]
+	// );
+
+	//my re-written function
+	// useEffect(() => {
+	// 	const fetchedMessages = firestore()
+	// 		.collection("conversations")
+	// 		.doc(params.matchDetails.id)
+	// 		.collection("messages")
+	// 		.orderBy("timestamp", "desc")
+	// 		.onSnapshot((documentSnapshot) => {
+	// 			setMessages(
+	// 				documentSnapshot.docs.map((doc) => ({
+	// 					id: doc.id,
+	// 					...doc.data(),
+	// 				}))
+	// 			);
+	// 		});
+	// 	return () => fetchedMessages();
+	// }, [params.matchDetails]);
+
+	useEffect(() => {
+		const unsubscribe = firestore()
+			.collection("conversations")
+			.doc(params.matchDetails.id)
+			.collection("messages")
+			.orderBy("timestamp", "desc")
+			.onSnapshot((snapshot) => {
+				setMessages(
+					snapshot.docs.map((doc) => ({
+						id: doc.id,
+						...doc.data(),
+					}))
+				);
+			});
+
+		return unsubscribe;
+	}, [params.matchDetails.id, firestore]);
+
 	// Without adding some crazy logic or restructing DB, cannot pass side forwards
 	//modify the ternary for messages.side in receiver/SenderMessage to just be 2 different colors
 	//Flat list out and see if passing the matchDetails through to receiver message works to render the correct profile picture
+	// const sendMessage = () => {
+	// 	addDoc(
+	// 		collection(db, "conversations", params.matchDetails.id, "messages"),
+	// 		{
+	// 			timestamp: serverTimestamp(),
+	// 			userId: user.uid,
+	// 			message: input,
+	// 			side:
+	// 				(messages[0].userId === user.uid && messages[0].side) ||
+	// 				(messages[1].userId === user.uid && messages[1].side)
+	// 					? true
+	// 					: false,
+	// 		}
+	// 	);
+
+	// 	setInput("");
+	// };
+
 	const sendMessage = () => {
-		addDoc(
-			collection(db, "conversations", params.matchDetails.id, "messages"),
-			{
+		firestore()
+			.collection("conversations")
+			.doc(params.matchDetails.id)
+			.collection("messages")
+			.add({
 				timestamp: serverTimestamp(),
 				userId: user.uid,
 				message: input,
@@ -70,9 +128,10 @@ const MessageScreen = () => {
 					(messages[1].userId === user.uid && messages[1].side)
 						? true
 						: false,
-			}
-		);
-
+			})
+			.then(() => {
+				console.log("Message added!");
+			});
 		setInput("");
 	};
 
