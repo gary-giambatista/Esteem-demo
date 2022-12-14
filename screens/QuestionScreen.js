@@ -1,20 +1,21 @@
 import { async } from "@firebase/util";
+import firestore from "@react-native-firebase/firestore";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import {
-	addDoc,
-	collection,
-	doc,
-	getDoc,
-	getDocs,
-	limit,
-	onSnapshot,
-	orderBy,
-	query,
-	serverTimestamp,
-	setDoc,
-	updateDoc,
-	where,
-} from "firebase/firestore";
+// import {
+// 	addDoc,
+// 	collection,
+// 	doc,
+// 	getDoc,
+// 	getDocs,
+// 	limit,
+// 	onSnapshot,
+// 	orderBy,
+// 	query,
+// 	serverTimestamp,
+// 	setDoc,
+// 	updateDoc,
+// 	where,
+// } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
 	Button,
@@ -30,7 +31,7 @@ import {
 	View,
 } from "react-native";
 import Header from "../components/Header";
-import { db } from "../firebaseConfig";
+// import { db } from "../firebaseConfig";
 import { useAuth } from "../hooks/useAuth";
 
 const QuestionScreen = () => {
@@ -62,126 +63,128 @@ const QuestionScreen = () => {
 		console.log("Congrats! You submitted your view!");
 	};
 
-	//don't forget TIMESTAMPS*
-
-	//create an answer
-	// timestamp = timestamp
-	// user = user.uid
-	// set matched === false
-	// side === side(true/false)
-	// description = view
-	// question(*REF) === params.questionDetails.id
 	const addAnswer = async (didMatch) => {
 		let docRef;
 		//setSubmitted(true); remember to add submitted: submitted into the create below
 		if (side === true) {
-			const docRef = await addDoc(
-				collection(db, "questions", params.questionDetails.id, "answerAgree"),
-				{
-					timestamp: serverTimestamp(),
+			const docRef = await firestore()
+				.collection("questions")
+				.doc(params.questionDetails.id)
+				.collection("answerAgree")
+				.add({
+					timestamp: firestore.FieldValue.serverTimestamp(),
 					userId: user.uid,
 					matchedUsersPhoto: user.photoURL,
 					matched: didMatch,
 					questionTitle: params.questionDetails.title,
 					desc: view,
 					side: side,
-				}
-			);
-			console.log("Document written with ID: ", docRef.id);
+				});
+			const docID = docRef.id;
+			console.log("Document written in answerAgree with ID: ", docID);
 		} else {
-			const docRef = await addDoc(
-				collection(
-					db,
-					"questions",
-					params.questionDetails.id,
-					"answerDisagree"
-				),
-				{
-					timestamp: serverTimestamp(),
+			const docRef = firestore()
+				.collection("questions")
+				.doc(params.questionDetails.id)
+				.collection("answerDisagree")
+				.add({
+					timestamp: firestore.FieldValue.serverTimestamp(),
 					userId: user.uid,
 					matchedUsersPhoto: user.photoURL,
 					matched: didMatch,
 					questionTitle: params.questionDetails.title,
 					desc: view,
 					side: side,
-				}
-			);
-			console.log("Document written with ID: ", docRef.id);
+				});
+			const docID = docRef.id;
+			console.log("Document written in answerDisagree with ID: ", docRef);
 		}
 	};
 
-	//query answers where: 3 constraints
-	//  matched == false
-	//  question == your question
-	//  agree !== your agree
-
 	const findMatch = async () => {
+		let noMatch;
+		let queryData;
+		let queryAnswerId;
 		if (side === true) {
-			const disagreeQuery = query(
-				collection(
-					db,
-					"questions",
-					params.questionDetails.id,
-					"answerDisagree"
-				),
-				where("matched", "==", false),
-				orderBy("timestamp", "asc"),
-				limit(1)
-			);
-			const querySnapshot = await getDocs(disagreeQuery);
+			const disagreeQuery = await firestore()
+				.collection("questions")
+				.doc(params.questionDetails.id)
+				.collection("answerDisagree")
+				// Filter results
+				.where("matched", "==", false)
+				.orderBy("timestamp", "asc")
+				.limit(1)
+				.get()
+				.then((querySnapshot) => {
+					noMatch = querySnapshot.empty;
+					console.log(noMatch);
 
-			if (querySnapshot.empty) {
+					querySnapshot.forEach((documentSnapshot) => {
+						(queryAnswerId = documentSnapshot.id),
+							(queryData = documentSnapshot.data());
+					});
+				});
+
+			if (noMatch) {
 				return goToSearchingModal();
 				//Looking for a match modal which redirects to home
 			} else {
-				const queryData = querySnapshot.docs[0].data();
-				const queryAnswerId = querySnapshot.docs[0].id;
 				// console.log("answerID:", queryAnswerId);
 				// console.log("matchData:", queryData);
 
 				//update matched
-				await updateDoc(
-					doc(
-						db,
-						"questions",
-						params.questionDetails.id,
-						"answerDisagree",
-						queryAnswerId
-					),
-					{
+				await firestore()
+					.collection("questions")
+					.doc(params.questionDetails.id)
+					.collection("answerDisagree")
+					.doc(queryAnswerId)
+					.update({
 						matched: true,
-					}
-				);
+					})
+					.then(() => {
+						console.log("answerDisagree updated!");
+					});
 				return createConversation(queryData);
 			}
 		} else if (side === false) {
-			const agreeQuery = query(
-				collection(db, "questions", params.questionDetails.id, "answerAgree"),
-				where("matched", "==", false),
-				orderBy("timestamp", "asc"),
-				limit(1)
-			);
-			const querySnapshot = await getDocs(agreeQuery);
-			if (querySnapshot.empty) {
+			const agreeQuery = await firestore()
+				.collection("questions")
+				.doc(params.questionDetails.id)
+				.collection("answerAgree")
+				// Filter results
+				.where("matched", "==", false)
+				.orderBy("timestamp", "asc")
+				.limit(1)
+				.get()
+				.then((querySnapshot) => {
+					noMatch = querySnapshot.empty;
+					console.log(noMatch);
+
+					querySnapshot.forEach((documentSnapshot) => {
+						(queryAnswerId = documentSnapshot.id),
+							(queryData = documentSnapshot.data());
+					});
+				});
+
+			if (noMatch) {
 				return goToSearchingModal();
 				//Looking for a match modal which redirects to home
 			} else {
-				const queryData = querySnapshot.docs[0].data();
-				const queryAnswerId = querySnapshot.docs[0].id;
+				// console.log("answerID:", queryAnswerId);
+				// console.log("matchData:", queryData);
 
 				//update matched
-				await updateDoc(
-					doc(
-						db,
-						"questions",
-						params.questionDetails.id,
-						"answerAgree",
-						queryAnswerId
-					),
-					{
+				await firestore()
+					.collection("questions")
+					.doc(params.questionDetails.id)
+					.collection("answerAgree")
+					.doc(queryAnswerId)
+					.update({
 						matched: true,
-					}
-				);
+					})
+					.then(() => {
+						console.log("answerAgree updated!");
+					});
 				return createConversation(queryData);
 			}
 		}
@@ -189,42 +192,50 @@ const QuestionScreen = () => {
 
 	const createConversation = async (queryData) => {
 		if (queryData) {
-			const matchRef = await addDoc(collection(db, "conversations"), {
-				timestamp: serverTimestamp(),
-				userIds: [user.uid, queryData.userId],
-				user0PhotoURL: user.photoURL,
-				user1PhotoURL: queryData.matchedUsersPhoto,
-				questionTitle: queryData.questionTitle,
-			});
-			console.log("Document written with ID: ", matchRef.id);
+			const matchRef = await firestore()
+				.collection("conversations")
+				.add({
+					timestamp: firestore.FieldValue.serverTimestamp(),
+					userIds: [user.uid, queryData.userId],
+					user0PhotoURL: user.photoURL,
+					user1PhotoURL: queryData.matchedUsersPhoto,
+					questionTitle: queryData.questionTitle,
+				});
+			console.log("Document written in conversations with ID: ", matchRef.id);
 			//create messages sub-collection
 			if (matchRef) {
-				const message1Ref = await addDoc(
-					collection(db, "conversations", matchRef.id, "messages"),
-					{
-						timestamp: serverTimestamp(),
+				const message1Ref = await firestore()
+					.collection("conversations")
+					.doc(matchRef.id)
+					.collection("messages")
+					.add({
+						timestamp: firestore.FieldValue.serverTimestamp(),
 						userId: user.uid,
 						side: side,
 						message: view,
-					}
+					});
+				console.log(
+					"Document written in messages(m1) with ID: ",
+					message1Ref.id
 				);
-				console.log("Document written with ID: ", message1Ref.id);
-				const message2Ref = await addDoc(
-					collection(db, "conversations", matchRef.id, "messages"),
-					{
-						timestamp: serverTimestamp(),
+				const message2Ref = await firestore()
+					.collection("conversations")
+					.doc(matchRef.id)
+					.collection("messages")
+					.add({
+						timestamp: firestore.FieldValue.serverTimestamp(),
 						userId: queryData.userId,
 						side: queryData.side,
 						message: queryData.desc,
-					}
+					});
+				console.log(
+					"Document written in messages(m2) with ID: ",
+					message2Ref.id
 				);
-				console.log("Document written with ID: ", message2Ref.id);
 			}
 		}
 		return goToMatchModal(); //matched screen function
 	};
-	//to add in colored side messages, just remove side from the answerDisagree, and write a conditional in Receiver/SenderMessage like this:
-	//{message.agreeSide ? color1 : color2} renaming side > agreeSide
 
 	return (
 		<ScrollView

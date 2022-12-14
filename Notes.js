@@ -240,3 +240,147 @@ matches[0].userIds[0];
 // 		"production": {}
 // 	}
 // }
+
+//old db functions in questionsScreen
+const addAnswer = async (didMatch) => {
+	let docRef;
+	//setSubmitted(true); remember to add submitted: submitted into the create below
+	if (side === true) {
+		const docRef = await addDoc(
+			collection(db, "questions", params.questionDetails.id, "answerAgree"),
+			{
+				timestamp: serverTimestamp(),
+				userId: user.uid,
+				matchedUsersPhoto: user.photoURL,
+				matched: didMatch,
+				questionTitle: params.questionDetails.title,
+				desc: view,
+				side: side,
+			}
+		);
+		console.log("Document written with ID: ", docRef.id);
+	} else {
+		const docRef = await addDoc(
+			collection(db, "questions", params.questionDetails.id, "answerDisagree"),
+			{
+				timestamp: serverTimestamp(),
+				userId: user.uid,
+				matchedUsersPhoto: user.photoURL,
+				matched: didMatch,
+				questionTitle: params.questionDetails.title,
+				desc: view,
+				side: side,
+			}
+		);
+		console.log("Document written with ID: ", docRef.id);
+	}
+};
+
+//query answers where: 3 constraints
+//  matched == false
+//  question == your question
+//  agree !== your agree
+
+const findMatch = async () => {
+	if (side === true) {
+		const disagreeQuery = query(
+			collection(db, "questions", params.questionDetails.id, "answerDisagree"),
+			where("matched", "==", false),
+			orderBy("timestamp", "asc"),
+			limit(1)
+		);
+		const querySnapshot = await getDocs(disagreeQuery);
+
+		if (querySnapshot.empty) {
+			return goToSearchingModal();
+			//Looking for a match modal which redirects to home
+		} else {
+			const queryData = querySnapshot.docs[0].data();
+			const queryAnswerId = querySnapshot.docs[0].id;
+			// console.log("answerID:", queryAnswerId);
+			// console.log("matchData:", queryData);
+
+			//update matched
+			await updateDoc(
+				doc(
+					db,
+					"questions",
+					params.questionDetails.id,
+					"answerDisagree",
+					queryAnswerId
+				),
+				{
+					matched: true,
+				}
+			);
+			return createConversation(queryData);
+		}
+	} else if (side === false) {
+		const agreeQuery = query(
+			collection(db, "questions", params.questionDetails.id, "answerAgree"),
+			where("matched", "==", false),
+			orderBy("timestamp", "asc"),
+			limit(1)
+		);
+		const querySnapshot = await getDocs(agreeQuery);
+		if (querySnapshot.empty) {
+			return goToSearchingModal();
+			//Looking for a match modal which redirects to home
+		} else {
+			const queryData = querySnapshot.docs[0].data();
+			const queryAnswerId = querySnapshot.docs[0].id;
+
+			//update matched
+			await updateDoc(
+				doc(
+					db,
+					"questions",
+					params.questionDetails.id,
+					"answerAgree",
+					queryAnswerId
+				),
+				{
+					matched: true,
+				}
+			);
+			return createConversation(queryData);
+		}
+	}
+};
+
+const createConversation = async (queryData) => {
+	if (queryData) {
+		const matchRef = await addDoc(collection(db, "conversations"), {
+			timestamp: serverTimestamp(),
+			userIds: [user.uid, queryData.userId],
+			user0PhotoURL: user.photoURL,
+			user1PhotoURL: queryData.matchedUsersPhoto,
+			questionTitle: queryData.questionTitle,
+		});
+		console.log("Document written with ID: ", matchRef.id);
+		//create messages sub-collection
+		if (matchRef) {
+			const message1Ref = await addDoc(
+				collection(db, "conversations", matchRef.id, "messages"),
+				{
+					timestamp: serverTimestamp(),
+					userId: user.uid,
+					side: side,
+					message: view,
+				}
+			);
+			console.log("Document written with ID: ", message1Ref.id);
+			const message2Ref = await addDoc(
+				collection(db, "conversations", matchRef.id, "messages"),
+				{
+					timestamp: serverTimestamp(),
+					userId: queryData.userId,
+					side: queryData.side,
+					message: queryData.desc,
+				}
+			);
+			console.log("Document written with ID: ", message2Ref.id);
+		}
+	}
+	return goToMatchModal(); //matched screen function
+};
