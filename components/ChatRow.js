@@ -59,8 +59,8 @@ const ChatRow = ({ matchDetails }) => {
 				style={styles.photoURL}
 				source={
 					matchDetails.userIds[0] === user.uid
-						? { uri: matchDetails?.user0PhotoURL }
-						: { uri: matchDetails?.user1PhotoURL }
+						? { uri: matchDetails?.user1PhotoURL }
+						: { uri: matchDetails?.user0PhotoURL }
 				}
 			/>
 			<View>

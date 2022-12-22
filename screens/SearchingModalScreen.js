@@ -17,7 +17,7 @@ const SearchingModalScreen = () => {
 			<Text style={styles.title}>Thank you for submitting your view!</Text>
 			<ActivityIndicator size="large" />
 			<Text style={styles.title}>
-				Please wait while we find you a chat partner, hang tight!
+				Please wait while we find you{"\n"} a chat partner, hang tight!
 			</Text>
 			<TouchableOpacity
 				style={styles.buttonGroup}
@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		padding: 20,
+		paddingTop: 40,
+		textAlign: "center",
 	},
 	buttonGroup: {
 		flexDirection: "row",

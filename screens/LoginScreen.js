@@ -15,12 +15,12 @@ const LoginScreen = () => {
 	const { onGoogleButtonPress, loading } = useAuth();
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1, backgroundColor: "#0e1a28" }}>
 			<ImageBackground
-				resizeMode="cover"
+				resizeMode="contain"
 				style={{ flex: 1 }}
 				source={{
-					uri: "https://upload.wikimedia.org/wikipedia/commons/5/57/NASA-Apollo8-Dec24-Earthrise-b.jpg",
+					uri: "https://media.licdn.com/dms/image/D4E12AQFLftbj95B1Ew/article-cover_image-shrink_720_1280/0/1657604726873?e=2147483647&v=beta&t=kG4IuiRELgeOUYa3UYZV8_PZFOhcvV_VgKoYOwL_6-Y",
 				}}
 			>
 				<View style={styles.loginContainer}>
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
 		paddingRight: 10,
 	},
 	logo: {
-		height: 80,
-		width: 80,
+		height: 55,
+		width: 55,
 		// marginBottom: 50, // positioning the logo
 		// marginTop: 300, // positioning the logo
 	},

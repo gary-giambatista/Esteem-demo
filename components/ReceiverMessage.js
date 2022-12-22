@@ -13,8 +13,8 @@ const ReceiverMessage = ({ messageBubble, matchDetails }) => {
 				style={styles.what}
 				source={
 					matchDetails.userIds[0] === user.uid
-						? { uri: matchDetails?.user0PhotoURL }
-						: { uri: matchDetails?.user1PhotoURL }
+						? { uri: matchDetails?.user1PhotoURL }
+						: { uri: matchDetails?.user0PhotoURL }
 				}
 				// source={require("../assets/favicon.png")}
 			/>

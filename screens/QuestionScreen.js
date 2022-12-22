@@ -374,6 +374,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 20,
 		textAlign: "center",
+		justifyContent: "center",
 		fontFamily: "quicksand-body",
 	},
 	input: {

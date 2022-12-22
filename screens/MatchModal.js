@@ -18,7 +18,10 @@ const MatchModal = () => {
 				{" "}
 				Congratulations, you found a chat partner!
 			</Text>
-			<Text style={styles.title}>Thank you for submitting your view!</Text>
+			<Text style={styles.title}>
+				Now it's time to chat, and learn about why your partner disagrees.
+				Remember to be nice, please!
+			</Text>
 			<TouchableOpacity
 				style={styles.buttonGroup}
 				onPress={() => navigation.navigate("Chat")}
@@ -33,8 +36,10 @@ export default MatchModal;
 
 const styles = StyleSheet.create({
 	title: {
+		textAlign: "center",
 		fontSize: 20,
 		padding: 20,
+		paddingTop: 40,
 	},
 	buttonGroup: {
 		flexDirection: "row",

@@ -64,6 +64,7 @@ export default ChatList;
 
 const styles = StyleSheet.create({
 	noMatchText: {
+		padding: 20,
 		textAlign: "center",
 		lineHeight: 28,
 		fontSize: 18,
