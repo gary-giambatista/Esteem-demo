@@ -163,6 +163,7 @@ const MessageScreen = () => {
 
 				<View style={styles.inputContainer}>
 					<TextInput
+						multiline={true}
 						style={styles.messageInput}
 						placeholder="Send Message..."
 						onChangeText={setInput}
@@ -209,8 +210,10 @@ const styles = StyleSheet.create({
 		marginRight: 16,
 	},
 	messageInput: {
+		flexShrink: 1,
 		lineHeight: 28,
 		fontSize: 18,
 		height: 40,
+		paddingRight: 10,
 	},
 });

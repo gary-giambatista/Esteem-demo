@@ -41,9 +41,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	title: {
+		flexShrink: 1,
 		fontSize: 20,
 		fontWeight: "bold",
 		paddingLeft: 10,
+		paddingRight: 10,
 	},
 	cardShadow: {
 		shadowColor: "000",

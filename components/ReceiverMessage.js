@@ -33,6 +33,7 @@ export default ReceiverMessage;
 
 const styles = StyleSheet.create({
 	messageContainer: {
+		flexShrink: 1,
 		alignSelf: "flex-start",
 		backgroundColor: "green",
 		padding: 10,

@@ -75,7 +75,9 @@ export default ChatRow;
 
 const styles = StyleSheet.create({
 	rowContainer: {
+		overflow: "hidden",
 		padding: 10,
+		paddingRight: 80,
 		margin: 10,
 		flexDirection: "row",
 		backgroundColor: "white",
