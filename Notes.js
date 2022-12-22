@@ -384,3 +384,7 @@ const createConversation = async (queryData) => {
 	}
 	return goToMatchModal(); //matched screen function
 };
+
+//12/21 ChangeLog
+// fixed QuestionsScreen textInput box keyboard avoiding view, removed IOS properties
+// fixed textInput box placeholder by adding this style: textAlignVertical: 'top' (may cause bugs on IOS)

@@ -100,7 +100,7 @@ const QuestionScreen = () => {
 			console.log("Document written in answerDisagree with ID: ", docRef);
 		}
 	};
-
+	//1st function called
 	const findMatch = async () => {
 		let noMatch;
 		let queryData;
@@ -277,9 +277,9 @@ const QuestionScreen = () => {
 			</View>
 			{side !== null ? (
 				<KeyboardAvoidingView
-					behavior={Platform.OS === "ios" ? "padding" : "height"} //configure screen correctly on different device OS
+					// behavior={Platform.OS === "ios" ? "padding" : "height"} //configure screen correctly on different device OS **DOESN't WORK for andriod**
 					style={{ flex: 1 }}
-					keyboardVerticalOffset={10}
+					// keyboardVerticalOffset={10}
 				>
 					<TextInput
 						multiline={true}
@@ -377,6 +377,7 @@ const styles = StyleSheet.create({
 		fontFamily: "quicksand-body",
 	},
 	input: {
+		textAlignVertical: "top",
 		padding: 10,
 		paddingTop: 10,
 		marginBottom: 10,

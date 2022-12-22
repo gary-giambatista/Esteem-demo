@@ -120,7 +120,7 @@ const MessageScreen = () => {
 			.doc(params.matchDetails.id)
 			.collection("messages")
 			.add({
-				timestamp: serverTimestamp(),
+				timestamp: firestore.FieldValue.serverTimestamp(),
 				userId: user.uid,
 				message: input,
 				side:
@@ -169,7 +169,7 @@ const MessageScreen = () => {
 						onSubmitEditing={sendMessage}
 						value={input}
 					/>
-					<Button onPress={sendMessage} title="Send" color="blue" />
+					<Button onPress={sendMessage} title="Send" color="black" />
 				</View>
 			</KeyboardAvoidingView>
 		</View>
