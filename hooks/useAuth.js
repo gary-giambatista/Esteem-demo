@@ -9,7 +9,7 @@ import React, {
 	useMemo,
 	useState,
 } from "react";
-import { Button } from "react-native";
+import { Appearance, Button } from "react-native";
 import { app } from "../firebaseConfig";
 
 const AuthContext = createContext();
@@ -26,6 +26,12 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
 	const [initializing, setInitializing] = useState(true);
 	const [user, setUser] = useState(null);
+	//state for user's color scheme
+	const [theme, setTheme] = useState(Appearance.getColorScheme());
+	//listener for changes in user's device theme
+	Appearance.addChangeListener((colorTheme) => {
+		setTheme(colorTheme.colorScheme);
+	});
 
 	GoogleSignin.configure({
 		webClientId:
@@ -86,8 +92,9 @@ export const AuthContextProvider = ({ children }) => {
 			logOut,
 			user,
 			initializing,
+			theme,
 		}),
-		[user, initializing]
+		[user, initializing, theme]
 	);
 
 	return (

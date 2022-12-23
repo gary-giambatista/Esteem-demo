@@ -2,11 +2,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen"; check into this
 import { StatusBar } from "expo-status-bar";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { AuthContextProvider } from "./hooks/useAuth";
 import StackNavigator from "./StackNavigator";
 
 export default function App() {
+	//import Fonts
 	let [fontsLoaded] = useFonts({
 		"pacifico-logo": require("./assets/fonts/Pacifico-Regular.ttf"),
 		"sanchez-body": require("./assets/fonts/Sanchez-Regular.ttf"),
@@ -18,7 +19,9 @@ export default function App() {
 	if (!fontsLoaded) {
 		return null;
 	}
+	// console.log(AuthContextProvider.children);
 
+	//style={theme === dark ? "light" : "dark"}
 	return (
 		<NavigationContainer>
 			<AuthContextProvider>

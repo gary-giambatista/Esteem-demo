@@ -1,6 +1,6 @@
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import {
 	Button,
 	Image,
@@ -15,11 +15,16 @@ import { useAuth } from "../hooks/useAuth";
 
 const HomeScreen = () => {
 	const navigation = useNavigation();
-	const { logOut, loading, user } = useAuth();
+	const { logOut, loading, user, theme } = useAuth();
 
 	return (
 		<SafeAreaView stlye={{ flex: 1 }}>
-			<View style={styles.HeaderContainer}>
+			<View
+				style={[
+					styles.HeaderContainer,
+					theme === "dark" ? styles.darkModeBG : null,
+				]}
+			>
 				<TouchableOpacity onPress={logOut}>
 					<Image style={styles.profilePic} source={{ uri: user.photoURL }} />
 				</TouchableOpacity>
@@ -37,8 +42,20 @@ const HomeScreen = () => {
 					/>
 				</TouchableOpacity>
 			</View>
-			<View style={styles.pageTitleContainer}>
-				<Text style={styles.pageTitle}>Discussion Topics</Text>
+			<View
+				style={[
+					styles.pageTitleContainer,
+					theme === "dark" ? styles.darkModeBG : null,
+				]}
+			>
+				<Text
+					style={[
+						styles.pageTitle,
+						theme === "dark" ? styles.darkModeTitle : null,
+					]}
+				>
+					Discussion Topics
+				</Text>
 			</View>
 			<TopicList />
 		</SafeAreaView>
@@ -62,6 +79,9 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
+	darkModeBG: {
+		backgroundColor: "#0e1a28",
+	},
 	logo: {
 		height: 40,
 		width: 40,
@@ -70,7 +90,7 @@ const styles = StyleSheet.create({
 	pageTitleContainer: {
 		alignItems: "center",
 		justifyContent: "center",
-		marginTop: 15,
+		paddingTop: 15,
 		borderBottomWidth: 1,
 		borderBottomColor: "grey",
 	},
@@ -78,7 +98,9 @@ const styles = StyleSheet.create({
 		fontFamily: "quicksand-semi",
 		fontSize: 30,
 		marginBottom: 15,
-		// backgroundColor: "#ffffff",
+	},
+	darkModeTitle: {
+		color: "#8899A6",
 	},
 	cardShadow: {
 		shadowColor: "000",
