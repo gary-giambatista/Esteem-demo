@@ -32,7 +32,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const MessageScreen = () => {
 	const navigation = useNavigation();
-	const { user } = useAuth();
+	const { user, theme } = useAuth();
 	const { params } = useRoute();
 
 	const [input, setInput] = useState("");
@@ -136,7 +136,12 @@ const MessageScreen = () => {
 	};
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View
+			style={[
+				styles.messagesContainer,
+				theme === "dark" ? styles.darkModeMessagesContainer : null,
+			]}
+		>
 			<Header title={params.matchDetails.questionTitle} goBack={true} />
 			{/* <Text>{JSON.stringify(messages)}</Text> */}
 			<KeyboardAvoidingView
@@ -170,7 +175,7 @@ const MessageScreen = () => {
 						onSubmitEditing={sendMessage}
 						value={input}
 					/>
-					<Button onPress={sendMessage} title="Send" color="black" />
+					<Button onPress={sendMessage} title="Send" color="#6D6B8F" />
 				</View>
 			</KeyboardAvoidingView>
 		</View>
@@ -180,6 +185,12 @@ const MessageScreen = () => {
 export default MessageScreen;
 
 const styles = StyleSheet.create({
+	messagesContainer: {
+		flex: 1,
+	},
+	darkModeMessagesContainer: {
+		backgroundColor: "#2B3642",
+	},
 	inputContainer: {
 		padding: 10,
 		margin: 10,

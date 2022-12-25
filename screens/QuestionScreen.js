@@ -35,7 +35,7 @@ import Header from "../components/Header";
 import { useAuth } from "../hooks/useAuth";
 
 const QuestionScreen = () => {
-	const { user } = useAuth();
+	const { user, theme } = useAuth();
 	const { params } = useRoute();
 	const navigation = useNavigation();
 	//state
@@ -241,12 +241,27 @@ const QuestionScreen = () => {
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
 			keyboardShouldPersistTaps="handled"
-			style={{ flex: 1 }}
+			style={[styles.scrollView, theme === "dark" ? styles.darkModeBG : null]}
 		>
 			<Header title="More Topics" goBack={false} />
-			<View style={[styles.questionContainer, styles.cardShadow]}>
-				<Text style={styles.title}>{params.questionDetails.title}</Text>
-				<Text style={styles.description}>
+			<View
+				style={[
+					styles.questionContainer,
+					styles.cardShadow,
+					theme === "dark" ? styles.darkModequestionContainer : null,
+				]}
+			>
+				<Text
+					style={[styles.title, theme === "dark" ? styles.darkModeTitle : null]}
+				>
+					{params.questionDetails.title}
+				</Text>
+				<Text
+					style={[
+						styles.description,
+						theme === "dark" ? styles.darkModeDescription : null,
+					]}
+				>
 					{params.questionDetails.description}
 				</Text>
 			</View>
@@ -311,9 +326,19 @@ const QuestionScreen = () => {
 export default QuestionScreen;
 
 const styles = StyleSheet.create({
+	scrollView: {
+		flex: 1,
+	},
+	darkModeBG: {
+		backgroundColor: "#2B3642",
+	},
 	questionContainer: {
 		margin: 10,
 		backgroundColor: "white",
+	},
+	darkModequestionContainer: {
+		backgroundColor: "#0E1A28",
+		borderRadius: 10,
 	},
 	title: {
 		padding: 20,
@@ -324,10 +349,16 @@ const styles = StyleSheet.create({
 		// borderWidth: 1,
 		// borderBottomColor: "grey",
 	},
+	darkModeTitle: {
+		color: "#B0B3B8",
+	},
 	description: {
 		padding: 20,
 		fontSize: 18,
 		fontFamily: "quicksand-body",
+	},
+	darkModeDescription: {
+		color: "#B0B3B8",
 	},
 	callToAction: {
 		padding: 20,
@@ -350,25 +381,31 @@ const styles = StyleSheet.create({
 		borderRadius: 200,
 	},
 	agreeButton: {
-		backgroundColor: "#039E43",
+		// backgroundColor: "#039E43", original
+		backgroundColor: "#269E0B",
+		// backgroundColor: "#3CD119",
 	},
 	disagreeButton: {
-		backgroundColor: "#FF5D52",
+		// backgroundColor: "#FF5D52", original
+		backgroundColor: "#9E0E03",
+		// backgroundColor: "#9E1D13",
 	},
 	selectedButtonAgree: {
 		padding: 10,
 		width: 150,
-		backgroundColor: "white",
+		backgroundColor: "#6D6B8F",
 		borderRadius: 200,
-		borderColor: "#039E43",
+		// borderColor: "#039E43",
+		borderColor: "#0E1A28",
 		borderWidth: 2,
 	},
 	selectedButtonDisagree: {
 		padding: 10,
 		width: 150,
-		backgroundColor: "white",
+		backgroundColor: "#6D6B8F",
 		borderRadius: 200,
-		borderColor: "#FF5D52",
+		// borderColor: "#FF5D52",
+		borderColor: "#0E1A28",
 		borderWidth: 2,
 	},
 	buttonText: {

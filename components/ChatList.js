@@ -7,7 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import ChatRow from "./ChatRow";
 
 const ChatList = () => {
-	const { user } = useAuth();
+	const { user, theme } = useAuth();
 	const [matches, setMatches] = useState([]);
 
 	//fetch matches and store to state >> use onSnapShot for live updates
@@ -47,7 +47,10 @@ const ChatList = () => {
 	return matches.length > 0 ? (
 		//map out the ChatRow's here for each match
 		<FlatList
-			style={{ height: "100%" }}
+			style={[
+				styles.chatListContainer,
+				theme === "dark" ? styles.darkModeChatListContainer : null,
+			]}
 			data={matches}
 			keyExtractor={(item) => item.id}
 			renderItem={({ item }) => <ChatRow matchDetails={item} />}
@@ -63,6 +66,12 @@ const ChatList = () => {
 export default ChatList;
 
 const styles = StyleSheet.create({
+	chatListContainer: {
+		height: "100%",
+	},
+	darkModeChatListContainer: {
+		backgroundColor: "#2B3642",
+	},
 	noMatchText: {
 		padding: 20,
 		textAlign: "center",

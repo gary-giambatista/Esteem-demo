@@ -38,7 +38,7 @@ const HomeScreen = () => {
 					<Ionicons
 						name="ios-chatbubble-ellipses-sharp"
 						size={30}
-						color="#FA423B"
+						color={theme === "dark" ? "#6D6B8F" : "#FA423B"}
 					/>
 				</TouchableOpacity>
 			</View>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 		borderRadius: 9999,
 	},
 	HeaderContainer: {
-		paddingTop: 20,
+		paddingTop: 22,
 		paddingLeft: 15,
 		paddingRight: 15,
 		display: "flex",
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	darkModeBG: {
-		backgroundColor: "#0e1a28",
+		backgroundColor: "#0E1A28",
 	},
 	logo: {
 		height: 40,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingTop: 15,
 		borderBottomWidth: 1,
-		borderBottomColor: "grey",
+		borderBottomColor: "#8899A6",
 	},
 	pageTitle: {
 		fontFamily: "quicksand-semi",
@@ -100,7 +100,10 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	darkModeTitle: {
-		color: "#8899A6",
+		// color: "#8899A6",
+		color: "#B0B3B8",
+		// color: "#4C5F75",
+		// color: "#447FC2",
 	},
 	cardShadow: {
 		shadowColor: "000",

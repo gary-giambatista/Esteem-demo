@@ -3,14 +3,14 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 
 const ReceiverMessage = ({ messageBubble, matchDetails }) => {
-	const { user } = useAuth();
+	const { user, theme } = useAuth();
 	const side = messageBubble.side;
 
 	// console.log(matchDetails.user0PhotoURL);
 	return (
 		<View style={{ flexDirection: "row" }}>
 			<Image
-				style={styles.what}
+				style={styles.image}
 				source={
 					matchDetails.userIds[0] === user.uid
 						? { uri: matchDetails?.user1PhotoURL }
@@ -21,7 +21,13 @@ const ReceiverMessage = ({ messageBubble, matchDetails }) => {
 			<View
 				style={[
 					styles.messageContainer,
-					side ? { backgroundColor: "green" } : { backgroundColor: "red" },
+					theme === "dark"
+						? side
+							? { backgroundColor: "#269E0B" }
+							: { backgroundColor: "#9E0E03" }
+						: side
+						? { backgroundColor: "green" }
+						: { backgroundColor: "red" },
 				]}
 			>
 				<Text style={{ color: "white" }}>{messageBubble.message}</Text>
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderTopLeftRadius: 0,
 	},
-	what: {
+	image: {
 		height: 48,
 		width: 48,
 		borderRadius: 9999,

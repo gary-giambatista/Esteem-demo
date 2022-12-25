@@ -22,7 +22,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const ChatRow = ({ matchDetails }) => {
 	const navigation = useNavigation();
-	const { user } = useAuth();
+	const { user, theme } = useAuth();
 
 	const [lastMessage, setLastMessage] = useState("");
 
@@ -53,7 +53,11 @@ const ChatRow = ({ matchDetails }) => {
 	return (
 		<TouchableOpacity
 			onPress={() => navigation.navigate("Message", { matchDetails })}
-			style={[styles.rowContainer, styles.cardShadow]}
+			style={[
+				styles.rowContainer,
+				styles.cardShadow,
+				theme === "dark" ? styles.darkModeRowContainer : null,
+			]}
 		>
 			<Image
 				style={styles.photoURL}
@@ -64,8 +68,17 @@ const ChatRow = ({ matchDetails }) => {
 				}
 			/>
 			<View>
-				<Text style={styles.questionTitle}>{matchDetails?.questionTitle}</Text>
-				<Text>{lastMessage || "Say Hi!"}</Text>
+				<Text
+					style={[
+						styles.questionTitle,
+						theme === "dark" ? styles.darkModeQuestionTitle : null,
+					]}
+				>
+					{matchDetails?.questionTitle}
+				</Text>
+				<Text style={theme === "dark" ? styles.darkModeText : null}>
+					{lastMessage || "Say Hi!"}
+				</Text>
 			</View>
 		</TouchableOpacity>
 	);
@@ -81,6 +94,10 @@ const styles = StyleSheet.create({
 		margin: 10,
 		flexDirection: "row",
 		backgroundColor: "white",
+	},
+	darkModeRowContainer: {
+		backgroundColor: "#0E1A28",
+		borderRadius: 10,
 	},
 	cardShadow: {
 		shadowColor: "000",
@@ -103,5 +120,11 @@ const styles = StyleSheet.create({
 		lineHeight: 28,
 		fontSize: 18,
 		fontWeight: "bold",
+	},
+	darkModeQuestionTitle: {
+		color: "#8899A6",
+	},
+	darkModeText: {
+		color: "#4C5F75",
 	},
 });

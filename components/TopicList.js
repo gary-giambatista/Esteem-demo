@@ -13,13 +13,22 @@ import {
 	where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 import { db } from "../firebaseConfig";
+import { useAuth } from "../hooks/useAuth";
 import TopicRow from "./TopicRow";
 
 const TopicList = () => {
 	const [questions, setQuestions] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const { theme } = useAuth();
+
 	// const questionCollectionRef = collection(db, "questions");
 
 	useEffect(() => {
@@ -75,7 +84,7 @@ const TopicList = () => {
 				<ActivityIndicator size="large" />
 			) : (
 				<FlatList
-					style={{ height: "100%" }}
+					style={[styles.flatList, theme === "dark" ? styles.darkModeBG : null]}
 					data={questions}
 					renderItem={({ item }) => <TopicRow questionDetails={item} />}
 					keyExtractor={(item) => item.id}
@@ -87,6 +96,14 @@ const TopicList = () => {
 
 export default TopicList;
 
+const styles = StyleSheet.create({
+	flatList: {
+		height: "100%",
+	},
+	darkModeBG: {
+		backgroundColor: "#2B3642",
+	},
+});
 // useEffect(() => {
 //     const fetchQuestions = async () => {
 //         const querySnapshot = await getDocs(collection(db, "questions"));

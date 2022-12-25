@@ -2,12 +2,20 @@ import { Foundation, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useAuth } from "../hooks/useAuth";
 
 const Header = ({ title, goBack }) => {
 	const navigation = useNavigation();
+	const { theme } = useAuth();
 
 	return (
-		<View style={[styles.headerContainer, styles.cardShadow]}>
+		<View
+			style={[
+				styles.headerContainer,
+				styles.cardShadow,
+				theme === "dark" ? styles.darkModeBG : null,
+			]}
+		>
 			<View style={styles.backAndTitleContainer}>
 				<TouchableOpacity
 					onPress={
@@ -17,14 +25,25 @@ const Header = ({ title, goBack }) => {
 					}
 					style={{ padding: 5 }}
 				>
-					<Ionicons name="chevron-back-outline" size={34} color="black" />
+					<Ionicons
+						name="chevron-back-outline"
+						size={34}
+						color={theme === "dark" ? "#6D6B8F" : "black"}
+					/>
 				</TouchableOpacity>
-				<Text style={styles.title}>{title}</Text>
+				<Text
+					style={[styles.title, theme === "dark" ? styles.darkModeTitle : null]}
+				>
+					{title}
+				</Text>
 			</View>
 		</View>
 	);
 };
 const styles = StyleSheet.create({
+	darkModeBG: {
+		backgroundColor: "#0E1A28",
+	},
 	headerContainer: {
 		padding: 10,
 		display: "flex",
@@ -46,6 +65,9 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		paddingLeft: 10,
 		paddingRight: 10,
+	},
+	darkModeTitle: {
+		color: "#B0B3B8",
 	},
 	cardShadow: {
 		shadowColor: "000",
